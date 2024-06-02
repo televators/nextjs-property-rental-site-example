@@ -1,5 +1,5 @@
 import PropertyCard from '@/components/PropertyCard';
-import properties from '@/properties.json';
+import properties from '@/properties.js';
 // import Link from 'next/link';
 
 const PropertiesPage = () => {
