@@ -6,6 +6,7 @@ import PropertyHeaderImage from "@/components/single_property/PropertyHeaderImag
 import BackToAll from "@/components/single_property/BackToAll";
 import PropertyDetails from "@/components/single_property/PropertyDetails";
 import PropertySidebar from "@/components/single_property/PropertySidebar";
+import Spinner from "@/components/Spinner";
 
 const PropertyPage = () => {
   const { id } = useParams();
@@ -39,6 +40,7 @@ const PropertyPage = () => {
 
   return (
     <>
+      { loading && <Spinner loading={ loading }/> }
       { !loading && property && (
         <>
           <PropertyHeaderImage image={ property.images[0] } />
@@ -48,7 +50,6 @@ const PropertyPage = () => {
             <div className="container m-auto py-10 px-6">
               <div className="grid grid-cols-1 md:grid-cols-70/30 w-full gap-6">
                 <PropertyDetails property={ property } />
-
                 <PropertySidebar property={ property } />
               </div>
             </div>
