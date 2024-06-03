@@ -6,8 +6,8 @@ import Image from 'next/image';
 import { FaGoogle } from 'react-icons/fa';
 import logo from '@/assets/images/logo-white.png';
 import profileDefault from '@/assets/images/profile.png';
-import MobileMenu from '@/components/navbar_components/MobileMenu';
-import ProfileDropdown from './navbar_components/ProfileDropdown';
+import MobileMenu from '@/components/navbar/MobileMenu';
+import ProfileDropdown from '@/components/navbar/ProfileDropdown';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
