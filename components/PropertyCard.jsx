@@ -33,6 +33,7 @@ const PropertyCard = ( { property } ) => {
         width={0}
         height={0}
         sizes="100vw"
+        priority={ true }
       />
 
       <div className="p-4">
