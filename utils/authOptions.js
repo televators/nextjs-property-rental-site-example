@@ -12,6 +12,9 @@ export const authOptions = {
           response_type: 'code',
         }
       },
+      httpOptions: {
+        timeout: 40000,
+      },
     } ),
   ],
   callbacks: {
