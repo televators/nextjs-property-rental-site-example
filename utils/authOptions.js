@@ -38,8 +38,7 @@ export const authOptions = {
           email: profile.email,
           username,
           image: profile.picture,
-        } )
-          .then( result => console.log( result ) );
+        } );
       }
 
       // 4. Return true to allow sign-in

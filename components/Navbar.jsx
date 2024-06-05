@@ -12,11 +12,15 @@ import { signIn, signOut, useSession, getProviders } from 'next-auth/react';
 
 const Navbar = () => {
   const { data: session } = useSession();
+  const profileImage = session?.user?.image;
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [providers, setProviders] = useState( null );
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
-
   const pathname = usePathname();
+
+  const toggleProfileDropdownState = () => {
+    setIsProfileDropdownOpen( ( prev ) => !prev );
+  };
 
   useEffect( () => {
     const setAuthProviders = async () => {
@@ -157,12 +161,18 @@ const Navbar = () => {
                   >
                     <span className='absolute -inset-1.5'></span>
                     <span className='sr-only'>Open user menu</span>
-                    <Image className='h-8 w-8 rounded-full' src={profileDefault} alt='' />
+                    <Image
+                      className='h-8 w-8 rounded-full'
+                      src={ profileImage || profileDefault }
+                      alt=''
+                      width={40}
+                      height={40}
+                    />
                   </button>
                 </div>
 
                 {/* Profile dropdown */}
-                {isProfileDropdownOpen && <ProfileDropdown />}
+                {isProfileDropdownOpen && <ProfileDropdown signOut={ signOut } toggleProfileDropdownState={ toggleProfileDropdownState } />}
               </div>
             </div>
           )}
