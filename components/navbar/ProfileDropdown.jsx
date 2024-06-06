@@ -11,6 +11,9 @@ const ProfileDropdown = ( { signOut, toggleProfileDropdownState } ) => {
       tabIndex='-1'
     >
       <Link
+        onClick={ () => {
+          toggleProfileDropdownState();
+        } }
         href='/profile'
         className='block px-4 py-2 text-sm text-gray-700'
         role='menuitem'
@@ -20,6 +23,9 @@ const ProfileDropdown = ( { signOut, toggleProfileDropdownState } ) => {
         Your Profile
       </Link>
       <Link
+        onClick={ () => {
+          toggleProfileDropdownState();
+        } }
         href='/properties/saved'
         className='block px-4 py-2 text-sm text-gray-700'
         role='menuitem'
