@@ -9,13 +9,12 @@ const override = {
   textAlign: 'center',
 };
 
-const LoadingPage = ( { loading } ) => {
+const LoadingPage = () => {
   return (
     <PulseLoader
       size={ 32 }
       cssOverride={ override }
       color="#3b82f6"
-      loading={ loading }
       aria-label='Loading spinner'
     />
   );

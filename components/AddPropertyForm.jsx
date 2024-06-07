@@ -1,8 +1,10 @@
 'use client';
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { toast } from "react-toastify";
 
+// TODO: Never actually doing anything significatn with the state for the form inputs.
+// Refactor to remove all the state since this submits to the server.
 const AddPropertyForm = () => {
-  const [mounted, setMounted] = useState( false );
   const [fields, setFields] = useState( {
     type: 'Apartment',
     name: 'Test Property',
@@ -74,6 +76,12 @@ const AddPropertyForm = () => {
   const handleImageChange = ( e ) => {
     const { files } = e.target;
 
+    // Limit user to 4 images
+    if ( files.length > 4 ) {
+      e.target.value = '';
+      toast.error( 'Please select a maximum of 4 images.' );
+    }
+
     const updatedImages = [...fields.images];
 
     for ( const file of files ) {
@@ -86,11 +94,7 @@ const AddPropertyForm = () => {
     } ) );
   };
 
-  useEffect( () => {
-    setMounted( true );
-  }, [] );
-
-  return mounted && (
+  return (
     <form method="POST" action="/api/properties" encType="multipart/form-data">
       <h2 className="text-3xl text-center font-semibold mb-6">
         Add Property

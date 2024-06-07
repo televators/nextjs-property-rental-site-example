@@ -10,7 +10,7 @@ export const GET = async ( request, { params } ) => {
 
     if ( ! property ) return new Response( 'Property not found', { status: 404 } );
 
-    return new Response( JSON.stringify( property ), { status: 200 } );
+    return Response.json( property, { status: 200 } );
   } catch ( error ) {
     console.error( error );
 
