@@ -2,6 +2,7 @@ import connectDB from "@/config/database";
 import Property from '@/models/Property';
 import { getSessionUser } from "@/utils/getSessionUser";
 import cloudinary from "@/config/cloudinary";
+import { revalidatePath } from "next/cache";
 
 // GET /api/properties
 export const GET = async ( request ) => {
@@ -64,12 +65,11 @@ export const POST = async ( request ) => {
         email: formData.get( 'seller_info.email' ),
         phone: formData.get( 'seller_info.phone' ),
       },
+      images: [],
       owner: userID,
     };
 
     // Upload images to Cloudinary
-    const imageURLs = [];
-
     for ( const image of images ) {
       const mimeType = image.type;
       const imageBuffer = await image.arrayBuffer();
@@ -80,37 +80,31 @@ export const POST = async ( request ) => {
       const imageBase64 = imageData.toString( 'base64' );
 
       // Make Cloudinary upload request
-      const result = cloudinary.uploader.upload(
+      const result = await cloudinary.uploader.upload(
         `data:${ mimeType };base64,${ imageBase64 }`,
         {
           folder: 'propertypulse',
-          timeout: 6000,
-        },
-        function( error, result ) {
-          if ( error ) {
-            console.log( '--== UPLOAD ERROR CB ==--' );
-            console.log( error );
-          } else {
-            console.log( '--== UPLOAD RESULT CB ==--' );
-            console.log( result );
-          }
         }
       );
 
-      imageURLs.push( result.secure_url )
+      // Add each uploaded image's secure URL to the propertyData.images array
+      propertyData.images.push( result.secure_url );
     }
 
-    // Add uploaded image URLs to the propertyData object
-    propertyData.images = imageURLs
-
     // TEMP
-    // console.log(propertyData);
+    console.log( '--== New Property Data w/ Images ==--' );
+    console.log(propertyData);
 
+    // Create new Property from Mongoose Schema.
     const newProperty = new Property( propertyData );
+    // Save new Property to DB.
     await newProperty.save();
 
-    // return Response.redirect( `${ process.env.NEXTAUTH_URL }/properties/${ newProperty._id }` );
-    return Response.json( { message: 'Great success' }, { status: 200 } );
+    // Invalidate cache for All Properties page so that the image is fetched
+    // for the new property when user visits /properties.
+    revalidatePath( '/properties' );
+    return Response.redirect( `${ process.env.NEXTAUTH_URL }/properties/${ newProperty._id }` );
+    // return Response.json( { message: 'Great success' }, { status: 200 } );
   } catch ( error ) {
     console.log( error );
     return new Response( 'Faileure adding property', { status: 500 } );
