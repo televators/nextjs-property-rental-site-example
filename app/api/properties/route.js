@@ -103,6 +103,8 @@ export const POST = async ( request ) => {
     // Invalidate cache for All Properties page so that the image is fetched
     // for the new property when user visits /properties.
     revalidatePath( '/properties' );
+    // Redirect to new single Property
+    // TODO: Add popup asking if you want to see new single, add another, or go to all Properties.
     return Response.redirect( `${ process.env.NEXTAUTH_URL }/properties/${ newProperty._id }` );
     // return Response.json( { message: 'Great success' }, { status: 200 } );
   } catch ( error ) {

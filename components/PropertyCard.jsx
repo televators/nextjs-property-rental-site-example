@@ -24,11 +24,14 @@ const PropertyCard = ( { property } ) => {
     }
   };
 
+  // DEBUG:
+  // console.log( property.images );
+
   return (
     <div className="rounded-xl shadow-md relative">
       <Image
-        className='w-full h-auto rounded-t-xl'
-        src={ `/images/properties/${ property.images[0] }` }
+        className='w-full h-auto rounded-t-xl aspect-[3/2] object-cover'
+        src={ property.images[0] }
         alt=""
         width={0}
         height={0}
