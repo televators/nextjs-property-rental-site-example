@@ -182,7 +182,7 @@ const AddPropertyForm = () => {
 
         <select
           id='state'
-          name='state'
+          name='location.state'
           className='border rounded w-full py-2 px-3 mb-2'
           required
           value={fields.location.state}
@@ -258,6 +258,7 @@ const AddPropertyForm = () => {
       </div>
 
       {/* Amenities */}
+      {/* TODO: Generate this programmatically. Dealing with this markup and atts/props is shitty. Do same as State select dropdown. */}
       <div className='mb-4'>
         <label className='block text-gray-700 font-bold mb-2'>Amenities</label>
         <div className='grid grid-cols-2 md:grid-cols-3 gap-2'>
@@ -449,6 +450,22 @@ const AddPropertyForm = () => {
         <label className='block text-gray-700 font-bold mb-2'>Rates (Leave blank if not applicable)</label>
         <div className='flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4'>
           <div className='flex items-center'>
+            <label htmlFor='nightly_rate' className='mr-2'>
+              Nightly
+            </label>
+            <input
+              type='number'
+              min='0.01'
+              step='0.01'
+              id='nightly_rate'
+              name='rates.nightly'
+              className='border rounded w-full py-2 px-3'
+              value={fields.rates.nightly}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className='flex items-center'>
             <label htmlFor='weekly_rate' className='mr-2'>
               Weekly
             </label>
@@ -463,6 +480,7 @@ const AddPropertyForm = () => {
               onChange={handleChange}
             />
           </div>
+
           <div className='flex items-center'>
             <label htmlFor='monthly_rate' className='mr-2'>
               Monthly
@@ -475,21 +493,6 @@ const AddPropertyForm = () => {
               name='rates.monthly'
               className='border rounded w-full py-2 px-3'
               value={fields.rates.monthly}
-              onChange={handleChange}
-            />
-          </div>
-          <div className='flex items-center'>
-            <label htmlFor='nightly_rate' className='mr-2'>
-              Nightly
-            </label>
-            <input
-              type='number'
-              min='0.01'
-              step='0.01'
-              id='nightly_rate'
-              name='rates.nightly'
-              className='border rounded w-full py-2 px-3'
-              value={fields.rates.nightly}
               onChange={handleChange}
             />
           </div>

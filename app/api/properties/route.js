@@ -91,10 +91,6 @@ export const POST = async ( request ) => {
       propertyData.images.push( result.secure_url );
     }
 
-    // TEMP
-    console.log( '--== New Property Data w/ Images ==--' );
-    console.log(propertyData);
-
     // Create new Property from Mongoose Schema.
     const newProperty = new Property( propertyData );
     // Save new Property to DB.
