@@ -7,27 +7,27 @@ import states from '@/utils/usStateList';
 // Refactor to remove all the state since this submits to the server.
 const AddPropertyForm = () => {
   const [fields, setFields] = useState({
-    type: 'Apartment',
-    name: 'Test Property',
+    type: '',
+    name: '',
     description: '',
     location: {
-      street: '123 Main Street',
-      city: 'Tallahassee',
-      state: 'FL',
-      zipcode: '32301',
+      street: '',
+      city: '',
+      state: '',
+      zipcode: '',
     },
-    beds: '3',
-    baths: '2',
-    square_feet: '1800',
+    beds: '',
+    baths: '',
+    square_feet: '',
     amenities: [],
     rates: {
       nightly: '',
       weekly: '',
-      monthly: '2000',
+      monthly: '',
     },
     seller_info: {
       name: '',
-      email: 'test@test.com',
+      email: '',
       phone: '',
     },
     images: [],
