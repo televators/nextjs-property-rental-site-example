@@ -4,6 +4,7 @@ import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import Spinner from '@/components/Spinner';
+import { toast } from 'react-toastify';
 import profileDefault from '@/assets/images/profile.png';
 
 const ProfilePage = () => {
@@ -51,11 +52,13 @@ const ProfilePage = () => {
         // Remove deleted property from UI
         const updatedProperties = properties.filter((property) => property._id !== id);
         setProperties(updatedProperties);
-        console.log('Property deleted successfully.');
+        toast.success('Property listing deleted successfully.');
       } else {
+        toast.warn('Something went wrong. Try again or contact Support.');
         console.warn("Response status wasn't 200", res.status);
       }
     } catch (error) {
+      toast.error('Failed to delete property listing.');
       console.error('Failed to delete property listing.', error);
     }
   };

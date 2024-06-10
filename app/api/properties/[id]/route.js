@@ -20,6 +20,78 @@ export const GET = async ( request, { params } ) => {
   }
 };
 
+// PUT /api/properties/:id
+export const PUT = async ( request, { params } ) => {
+  try {
+    await connectDB();
+
+    const sessionUser = await getSessionUser();
+
+    if ( ! sessionUser || ! sessionUser.userID ) {
+      return new Response( 'User ID is required.', { status: 401 } );
+    }
+
+    const { id: propertyID } = params;
+    const { userID } = sessionUser;
+
+    const formData = await request.formData();
+
+    // Get all of the amenities
+    const amenities = formData.getAll( 'amenities' );
+
+    // Get existing property by ID
+    const exisitingProperty = await Property.findById( propertyID );
+
+    if ( ! exisitingProperty ) {
+      return new Response( 'Property not found.', { status: 404 } );
+    }
+
+    // Verify ownership
+    if ( exisitingProperty.owner.toString() !== userID ) {
+      return new Response("Unauthorized: user doesn't own requested property.", { status: 401 });
+    }
+
+    // Create big ol' object to ship to DB.
+    // NOTE: Images aren't set directly here since they're grabbed from the form data,
+    // uploaded to Cloudinary, then the URLs for them from Cloudinary are added to the
+    // images array in the DB for the property.
+    const propertyData = {
+      type: formData.get( 'type' ),
+      name: formData.get( 'name' ),
+      description: formData.get( 'description' ),
+      location: {
+        street: formData.get( 'location.street' ),
+        city: formData.get( 'location.city' ),
+        state: formData.get( 'location.state' ),
+        zipcode: formData.get( 'location.zipcode' ),
+      },
+      beds: formData.get( 'beds' ),
+      baths: formData.get( 'baths' ),
+      square_feet: formData.get( 'square_feet' ),
+      amenities,
+      rates: {
+        nightly: formData.get( 'rates.nightly' ),
+        weekly: formData.get( 'rates.weekly' ),
+        monthly: formData.get( 'rates.monthly' ),
+      },
+      seller_info: {
+        name: formData.get( 'seller_info.name' ),
+        email: formData.get( 'seller_info.email' ),
+        phone: formData.get( 'seller_info.phone' ),
+      },
+      owner: userID,
+    };
+
+    // Update property in DB with new data
+    const updatedProperty = await Property.findByIdAndUpdate(propertyID, propertyData);
+
+    return Response.json( updatedProperty, { status: 200 } );
+  } catch ( error ) {
+    console.log( error );
+    return new Response( 'Faileure adding property', { status: 500 } );
+  }
+};
+
 // DELETE /api/properties/:id
 export const DELETE = async ( request, { params } ) => {
   try {
