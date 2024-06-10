@@ -32,7 +32,7 @@ const ProfilePage = () => {
         setLoading(false);
       }
     };
-    console.log(session?.user?.id);
+
     // When session is available, fetch all current user's properties
     if (session?.user?.id) {
       fetchUserProperties(session.user.id);
@@ -46,7 +46,6 @@ const ProfilePage = () => {
 
     try {
       const res = await fetch(`/api/properties/${id}`, { method: 'DELETE' });
-      console.log(res);
 
       if (res.status === 200) {
         // Remove deleted property from UI
@@ -54,11 +53,10 @@ const ProfilePage = () => {
         setProperties(updatedProperties);
         console.log('Property deleted successfully.');
       } else {
-        alert('Res status not 200: ', res.status, res.statusText);
+        console.warn("Response status wasn't 200", res.status);
       }
     } catch (error) {
-      alert('Failed to delete property listing.');
-      console.log('Hmm...', error);
+      console.error('Failed to delete property listing.', error);
     }
   };
 
