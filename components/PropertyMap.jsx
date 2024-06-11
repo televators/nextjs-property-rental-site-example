@@ -10,13 +10,6 @@ import pin from '@/assets/images/pin.svg';
 const PropertyMap = ({ property }) => {
   const [lat, setLat] = useState(null);
   const [long, setLong] = useState(null);
-  const [viewport, setViewport] = useState({
-    latitude: 0,
-    longitude: 0,
-    zoom: 12,
-    width: '100%',
-    height: '500px',
-  });
   const [loading, setLoading] = useState(true);
 
   setDefaults({
@@ -32,7 +25,11 @@ const PropertyMap = ({ property }) => {
           `${property.location.street} ${property.location.city} ${property.location.state} ${property.location.zipcode}`,
         );
         const { lat, lng } = res.results[0].geometry.location;
-        console.log('Address Coordinates (lat, long):', lat, lng);
+        console.log(lat, lng);
+        setLat(lat);
+        setLong(lng);
+
+        setLoading(false);
       };
 
       fetchCoords();
@@ -41,6 +38,28 @@ const PropertyMap = ({ property }) => {
     }
   }, []);
 
-  return <h1>wuhh</h1>;
+  if (loading) return <Spinner loading={loading} />;
+
+  return (
+    !loading && (
+      <Map
+        mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
+        mapLib={import('mapbox-gl')}
+        initialViewState={{
+          latitude: lat,
+          longitude: long,
+          zoom: 15,
+        }}
+        style={{
+          width: '100%',
+          height: 500,
+        }}
+        mapStyle='mapbox://styles/mapbox/streets-v9'>
+        <Marker latitude={lat} longitude={long} anchor='bottom'>
+          <Image src={pin} alt='location' width={40} height={40} />
+        </Marker>
+      </Map>
+    )
+  );
 };
 export default PropertyMap;
