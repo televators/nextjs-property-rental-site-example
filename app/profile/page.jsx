@@ -17,11 +17,11 @@ const ProfilePage = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchUserProperties = async (userId) => {
-      if (!userId) return;
+    const fetchUserProperties = async (userID) => {
+      if (!userID) return;
 
       try {
-        const res = await fetch(`/api/properties/user/${userId}`);
+        const res = await fetch(`/api/properties/user/${userID}`);
 
         if (res.status === 200) {
           const data = await res.json();
