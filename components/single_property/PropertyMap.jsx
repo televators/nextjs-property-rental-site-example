@@ -11,6 +11,7 @@ const PropertyMap = ({ property }) => {
   const [lat, setLat] = useState(null);
   const [long, setLong] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [geocodeError, setGeocodeError] = useState(false);
 
   setDefaults({
     key: process.env.NEXT_PUBLIC_GOOGLE_GEOCODING_API_KEY,
@@ -19,27 +20,42 @@ const PropertyMap = ({ property }) => {
   });
 
   useEffect(() => {
-    try {
-      const fetchCoords = async () => {
+    const fetchCoords = async () => {
+      try {
         const res = await fromAddress(
           `${property.location.street} ${property.location.city} ${property.location.state} ${property.location.zipcode}`,
         );
+
+        // Did the API find coordinates for given address?
+        if (res.results.length === 0) {
+          setGeocodeError(true);
+          setLoading(false);
+
+          return;
+        }
+
         const { lat, lng } = res.results[0].geometry.location;
         console.log(lat, lng);
         setLat(lat);
         setLong(lng);
 
         setLoading(false);
-      };
+      } catch (error) {
+        console.error('Error fetching coordinates.', error);
+        setGeocodeError(true);
+        setLoading(false);
+      }
+    };
 
-      fetchCoords();
-    } catch (error) {
-      console.error('Failed to fetch coordinates from Geocode API: ', error);
-    }
+    fetchCoords();
   }, []);
 
   if (loading) return <Spinner loading={loading} />;
 
+  // Did geocoding fail?
+  if (geocodeError) {
+    return <div className='text-xl'>No location data found.</div>;
+  }
   return (
     !loading && (
       <Map
