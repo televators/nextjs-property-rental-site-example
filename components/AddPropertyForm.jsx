@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 import states from '@/utils/usStateList';
 
-// TODO: Never actually doing anything significatn with the state for the form inputs.
+// TODO: Never actually doing anything significant with the state for the form inputs.
 // Refactor to remove all the state since this submits to the server.
 const AddPropertyForm = () => {
   const [fields, setFields] = useState({

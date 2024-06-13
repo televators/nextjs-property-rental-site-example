@@ -21,6 +21,7 @@ export const GET = async (request, { params }) => {
     // Check if current property is bookmarked
     let isBookmarked = user.bookmarks.includes(propertyID);
 
+    // Return simple boolean for the BookmarkButton component to set button state with
     return Response.json({
       isBookmarked,
     }, { status: 200 });

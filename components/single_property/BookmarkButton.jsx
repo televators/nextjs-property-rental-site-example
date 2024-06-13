@@ -9,7 +9,8 @@ const BookmarkButton = ({ property }) => {
   const userID = session?.user?.id;
   const propertyID = property._id;
 
-  const [bookmarkFound, setBookmarkFound] = useState(false);
+  // Loading just used to show placeholder bookmark button
+  const [loading, setLoading] = useState(true);
   const [isBookmarked, setIsBookmarked] = useState(null);
   const buttonVariant = {
     color: isBookmarked ? 'bg-red-500 hover:bg-red-600' : 'bg-blue-500 hover:bg-blue-600',
@@ -17,13 +18,20 @@ const BookmarkButton = ({ property }) => {
   };
 
   useEffect(() => {
+    if (!userID) {
+      setLoading(false);
+      setIsBookmarked(false);
+
+      return;
+    }
+
     const fetchBookmarkStatus = async () => {
       try {
         const res = await fetch(`/api/bookmarks/${propertyID}`);
 
         if (res.status === 200) {
           const { isBookmarked } = await res.json();
-          setBookmarkFound(true);
+          setLoading(false);
           setIsBookmarked(isBookmarked);
         }
       } catch (error) {
@@ -62,7 +70,7 @@ const BookmarkButton = ({ property }) => {
     }
   };
 
-  return !bookmarkFound ? (
+  return loading ? (
     <button
       disabled
       className='bg-gray-500 text-white font-bold w-full py-2 px-4 rounded-full flex items-center justify-center'>
