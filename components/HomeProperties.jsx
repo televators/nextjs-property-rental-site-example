@@ -1,12 +1,19 @@
 import connectDB from '@/config/database';
 import Property from '@/models/Property';
+import { convertToSerializableObject } from '@/utils/convertToObject';
 import Link from 'next/link';
 import PropertyCard from '@/components/PropertyCard';
 
 const HomeProperties = async () => {
   await connectDB();
 
-  const recentProperties = await Property.find({}).sort({ createdAt: -1 }).limit(3).lean();
+  const recentPropertyEntries = await Property.find({}).sort({ createdAt: -1 }).limit(3).lean();
+  const recentProperties = [];
+
+  recentPropertyEntries.map((property) => {
+    const propertyObject = convertToSerializableObject(property);
+    recentProperties.push(propertyObject);
+  });
 
   return (
     <>

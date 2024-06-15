@@ -33,7 +33,7 @@ export const POST = async ( request ) => {
 
     const formData = await request.formData();
 
-    // Get all of the amenities
+    // Get all of the amenities and images
     const amenities = formData.getAll( 'amenities' );
     const images = formData.getAll( 'images' ).filter( ( image ) => image.name !== '' );
 

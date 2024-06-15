@@ -1,5 +1,6 @@
 'use client';
-import { useState } from 'react';
+// import { useState } from 'react';
+import { useRouter } from 'next/router';
 import Image from 'next/image';
 import Link from 'next/link';
 import { toast } from 'react-toastify';
@@ -9,8 +10,9 @@ import { FaBed, FaBath, FaRulerCombined, FaMoneyBill, FaMapMarker, FaBookmark } 
 const PropertyCard = ({ property, enableBookmarkToggle }) => {
   const { rates, _id: propertyID } = property;
 
+  // TODO: Finish going through and refactoring to use server actions instead of all the API endpoints for Bookmarks.
   // This is used on the All Bookmarks page for signed-in users. Users can delete properties from the page but since the page is a server component
-  const [wasRemoved, setWasRemoved] = useState(false);
+  // const [wasRemoved, setWasRemoved] = useState(false);
 
   const getRateDisplay = () => {
     //#region Perf Prof Maybz
@@ -44,7 +46,6 @@ const PropertyCard = ({ property, enableBookmarkToggle }) => {
       });
 
       if (res.status === 200) {
-        const data = await res.json();
         window.location.reload();
       }
     } catch (error) {
