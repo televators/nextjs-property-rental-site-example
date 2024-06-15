@@ -5,7 +5,7 @@ import states from '@/utils/usStateList';
 
 // TODO: Never actually doing anything significant with the state for the form inputs.
 // Refactor to remove all the state since this submits to the server.
-const AddPropertyForm = () => {
+const AddPropertyForm = ({ propertyTypes }) => {
   const [fields, setFields] = useState({
     type: '',
     name: '',
@@ -111,13 +111,11 @@ const AddPropertyForm = () => {
           required
           value={fields.type}
           onChange={handleChange}>
-          <option value='Apartment'>Apartment</option>
-          <option value='Condo'>Condo</option>
-          <option value='House'>House</option>
-          <option value='Cabin Or Cottage'>Cabin or Cottage</option>
-          <option value='Room'>Room</option>
-          <option value='Studio'>Studio</option>
-          <option value='Other'>Other</option>
+          {propertyTypes.map((type, index) => (
+            <option key={index} value={type}>
+              {type}
+            </option>
+          ))}
         </select>
       </div>
 
