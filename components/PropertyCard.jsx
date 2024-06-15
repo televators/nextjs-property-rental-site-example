@@ -116,7 +116,7 @@ const PropertyCard = ({ property, enableBookmarkToggle }) => {
 
         <div className='border border-gray-100 mb-5'></div>
 
-        <div className='flex flex-col lg:flex-row justify-end gap-3 mb-4'>
+        <div className='flex flex-col lg:flex-row justify-end gap-3'>
           <Link
             href={`/properties/${property._id}`}
             className='h-[36px] bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-center text-sm'>
