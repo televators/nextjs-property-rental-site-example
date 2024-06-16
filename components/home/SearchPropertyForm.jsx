@@ -1,11 +1,14 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import getValidPropertyTypes from '@/utils/getValidPropertyTypes';
 
-const SearchPropertyForm = ({ propertyTypes }) => {
+const SearchPropertyForm = () => {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
   const [searchType, setSearchType] = useState('All');
+  const validPropertyTypes = getValidPropertyTypes();
+  console.log(validPropertyTypes);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -46,11 +49,11 @@ const SearchPropertyForm = ({ propertyTypes }) => {
           value={searchType}
           onChange={(e) => setSearchType(e.target.value)}>
           <option value='All'>All</option>
-          {propertyTypes.map((type, index) => (
+          {/* {validPropertyTypes.map((type, index) => (
             <option key={index} value={type}>
               {type}
             </option>
-          ))}
+          ))} */}
         </select>
       </div>
 

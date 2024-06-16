@@ -1,9 +1,6 @@
-import mongoose from 'mongoose';
 import SearchPropertyForm from './home/SearchPropertyForm';
 
 const Hero = () => {
-  const validPropertyTypes = mongoose.model('Property').schema.path('type').enumValues;
-
   return (
     <section className='bg-blue-700 py-20 mb-4'>
       <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center'>
@@ -12,7 +9,7 @@ const Hero = () => {
           <p className='my-4 text-xl text-white'>Discover the perfect property that suits your needs.</p>
         </div>
 
-        <SearchPropertyForm propertyTypes={validPropertyTypes} />
+        <SearchPropertyForm />
       </div>
     </section>
   );
