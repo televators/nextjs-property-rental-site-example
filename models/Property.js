@@ -96,4 +96,7 @@ const PropertySchema = new Schema( {
 
 const Property = models.Property || model( 'Property', PropertySchema );
 
+// console.log("---=== Inside the util file before export ===---");
+// console.log('---=== Property Schema ===--- ', Property.schema.path('type').enumValues);
+
 export default Property;

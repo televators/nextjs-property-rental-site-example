@@ -1,14 +1,35 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+// import Property from '@/models/Property';
 import getValidPropertyTypes from '@/utils/getValidPropertyTypes';
 
 const SearchPropertyForm = () => {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
   const [searchType, setSearchType] = useState('All');
+  // const [validPropertyTypes, setValidPropertyTypes] = useState(null);
   const validPropertyTypes = getValidPropertyTypes();
-  console.log(validPropertyTypes);
+
+  // useEffect(() => {
+  //   console.log('Made it to the useEffect...');
+
+  //   async function shibby() {
+  //     try {
+  //       // const typesArray = Property.schema.path('type').enumValues;
+  //       const typesArray = getValidPropertyTypes();
+
+  //       console.log('typesArray: ', typesArray);
+
+  //       setValidPropertyTypes(typesArray);
+  //     } catch (error) {
+  //       console.log('Shit balls. Almost there.');
+  //       console.error(error);
+  //     }
+  //   }
+
+  //   shibby();
+  // }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -49,11 +70,11 @@ const SearchPropertyForm = () => {
           value={searchType}
           onChange={(e) => setSearchType(e.target.value)}>
           <option value='All'>All</option>
-          {/* {validPropertyTypes.map((type, index) => (
+          {validPropertyTypes.map((type, index) => (
             <option key={index} value={type}>
               {type}
             </option>
-          ))} */}
+          ))}
         </select>
       </div>
 
