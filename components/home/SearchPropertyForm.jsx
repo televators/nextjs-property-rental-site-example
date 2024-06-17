@@ -2,10 +2,11 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-const SearchPropertyForm = ({ propertyTypes }) => {
+const SearchPropertyForm = () => {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
   const [searchType, setSearchType] = useState('All');
+  const propertyTypes = ['Apartment', 'Condo', 'House', 'Cabin or Cottage', 'Room', 'Studio', 'Other'];
 
   const handleSubmit = (e) => {
     e.preventDefault();
