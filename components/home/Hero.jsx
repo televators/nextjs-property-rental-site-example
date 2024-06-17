@@ -1,4 +1,4 @@
-import SearchPropertyForm from './home/SearchPropertyForm';
+import SearchPropertyForm from '@/components/SearchPropertyForm';
 
 const Hero = () => {
   return (

@@ -1,4 +1,5 @@
 import { Schema, model, models } from 'mongoose';
+import { validPropertyTypes } from '@/config/validPropertyTypes';
 
 const PropertySchema = new Schema( {
   owner: {
@@ -13,15 +14,7 @@ const PropertySchema = new Schema( {
   type: {
     type: String,
     required: true,
-    enum: [
-      'Apartment',
-      'Condo',
-      'House',
-      'Cabin or Cottage',
-      'Room',
-      'Studio',
-      'Other',
-    ],
+    enum: validPropertyTypes,
   },
   description: {
     type: String,

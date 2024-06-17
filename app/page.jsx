@@ -1,6 +1,6 @@
-import Hero from '@/components/Hero';
+import Hero from '@/components/home/Hero';
 import InfoBoxes from '@/components/InfoBoxes';
-import HomeProperties from '@/components/HomeProperties';
+import HomeProperties from '@/components/home/HomeProperties';
 
 const HomePage = () => {
   return (

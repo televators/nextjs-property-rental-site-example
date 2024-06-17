@@ -13,7 +13,6 @@ const PropertyPage = async ({ params }) => {
   await connectDB();
 
   // Grab property from DB
-  console.log(typeof params.id, params.id);
   const propertyEntry = await Property.findById(params.id).lean();
 
   // Convert to plain JS object so it can be passed to client components

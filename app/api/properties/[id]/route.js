@@ -1,3 +1,4 @@
+import { revalidatePath } from "next/cache";
 import connectDB from "@/config/database";
 import Property from '@/models/Property';
 import { getSessionUser } from "@/utils/getSessionUser";
@@ -131,6 +132,9 @@ export const DELETE = async ( request, { params } ) => {
 
     // After deleting image from Cloudinary, delete the property
     await property.deleteOne();
+
+    // After property and associated images have been deleted, revalidate the cache for the Properties page
+    revalidatePath('/properties', 'page');
 
     return new Response( 'Property deleted successfully.', { status: 200 } );
   } catch ( error ) {

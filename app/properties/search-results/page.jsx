@@ -1,12 +1,10 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
-import Link from 'next/link';
-import { FaArrowAltCircleLeft } from 'react-icons/fa';
 import PropertyCard from '@/components/PropertyCard';
 import Spinner from '@/components/Spinner';
 import BackToAll from '@/components/single_property/BackToAll';
-import SearchPropertyForm from '@/components/home/SearchPropertyForm';
+import SearchPropertyForm from '@/components/SearchPropertyForm';
 
 const PropertySearchResultsPage = () => {
   const searchParams = useSearchParams();

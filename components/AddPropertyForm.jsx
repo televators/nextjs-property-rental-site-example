@@ -2,10 +2,11 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import states from '@/utils/usStateList';
+import { validPropertyTypes } from '@/config/validPropertyTypes';
 
 // TODO: Never actually doing anything significant with the state for the form inputs.
 // Refactor to remove all the state since this submits to the server.
-const AddPropertyForm = ({ propertyTypes }) => {
+const AddPropertyForm = () => {
   const [fields, setFields] = useState({
     type: '',
     name: '',
@@ -111,7 +112,7 @@ const AddPropertyForm = ({ propertyTypes }) => {
           required
           value={fields.type}
           onChange={handleChange}>
-          {propertyTypes.map((type, index) => (
+          {validPropertyTypes.map((type, index) => (
             <option key={index} value={type}>
               {type}
             </option>
