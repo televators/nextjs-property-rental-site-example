@@ -39,7 +39,9 @@ const PropertySearchResultsPage = () => {
   ) : (
     <>
       {/* Search Form */}
-      <SearchPropertyForm />
+      <div className='bg-blue-700 py-6 mb-4'>
+        <SearchPropertyForm />
+      </div>
 
       {/* Results */}
       <section className='px-4 py-6'>
