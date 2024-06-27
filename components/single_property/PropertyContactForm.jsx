@@ -53,7 +53,7 @@ const PropertyContactForm = ({ property }) => {
         console.error(resMessage);
       }
     } catch (error) {
-      toast.error('Server encountered an error.');
+      toast.error('Server encountered an error while sending message.');
       console.error(error);
     }
   };

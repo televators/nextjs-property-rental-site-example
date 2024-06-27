@@ -30,6 +30,9 @@ export const POST = async (request) => {
     const { user } = sessionUser;
 
     // Don't allow user to message themselves
+    // NOTE: Added some conditional rendering on the front-end so that the form doesn't even show
+    // for a user viewing their own property. Still keeping this in case there's ever some weird
+    // rendering issue with the component and the form shows for user's own property.
     if ( user.id === recipient ) {
       return Response.json( {
         message: "Can't send message to self."
@@ -52,8 +55,7 @@ export const POST = async (request) => {
       message: 'Message sent successfully.'
     }, { status: 200 } );
   } catch (error) {
-    console.error('Error saving new message.');
-    console.error(error);
+    console.error('Error saving new message.', '\n', error);
 
     return Response.json({
       message: 'Error sending message.',
