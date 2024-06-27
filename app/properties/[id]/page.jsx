@@ -1,6 +1,7 @@
 import connectDB from '@/config/database';
 import Property from '@/models/Property';
 import { convertToSerializableObject } from '@/utils/convertToObject';
+import Link from 'next/link';
 import PropertyHeaderImage from '@/components/single_property/PropertyHeaderImage';
 import BackToAll from '@/components/single_property/BackToAll';
 import PropertyDetails from '@/components/single_property/PropertyDetails';
@@ -12,11 +13,31 @@ const PropertyPage = async ({ params }) => {
 
   await connectDB();
 
+  const propertyID = params.id;
+  console.log('---=== Property ID ===---');
+  console.log(propertyID);
+
+  if (!propertyID || propertyID.length === 0) {
+    console.error('Property ID malformed. ID: ', '\n', propertyID);
+
+    return (
+      <h1 className='text-center text-2xl font-bold mt-10'>
+        Property ID doesn't exist. The property may have been deleted or the ID may have changed. Please go back to{' '}
+        <Link href='/properties'>All Properties</Link> and try again.
+      </h1>
+    );
+  }
+
   // Grab property from DB
-  const propertyEntry = await Property.findById(params.id).lean();
+  // NOTE: Using lean() makes Mongoose return plain JS object instead of first instantiating a full
+  // Document from it. Faster but the object doesn't have any of the Mongoose Doc obj methods, obvs.
+  // If finding a doc to perform CRUD actions on it, omit lean() and fetch the full Doc.
+  const propertyEntry = await Property.findById(propertyID).lean();
 
   // Convert to plain JS object so it can be passed to client components
   const propertyObject = convertToSerializableObject(propertyEntry);
+
+  console.log();
 
   if (!propertyObject) {
     return <h1 className='text-center text-2xl font-bold mt-10'>Property not found.</h1>;
@@ -31,7 +52,7 @@ const PropertyPage = async ({ params }) => {
         <div className='container m-auto py-10 px-6'>
           <div className='grid grid-cols-1 md:grid-cols-70/30 w-full gap-6'>
             <PropertyDetails property={propertyObject} />
-            <PropertySidebar property={propertyObject} />
+            <PropertySidebar property={propertyObject} PUBLIC_DOMAIN={PUBLIC_DOMAIN} />
           </div>
         </div>
       </section>

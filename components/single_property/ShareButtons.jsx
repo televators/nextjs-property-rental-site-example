@@ -11,8 +11,8 @@ import {
   EmailIcon,
 } from 'react-share';
 
-const ShareButtons = ({ property }) => {
-  const shareURL = `${process.env.NEXT_PUBLIC_DOMAIN}/properties/${property._id}`;
+const ShareButtons = ({ property, PUBLIC_DOMAIN }) => {
+  const shareURL = `${PUBLIC_DOMAIN}/properties/${property._id}`;
   const propertyType = property.type.replace(/\s/g, '');
 
   return (

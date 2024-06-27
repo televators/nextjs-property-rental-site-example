@@ -17,7 +17,7 @@ export const GET = async (request, { params }) => {
     }
 
     // Get user from DB
-    const user = await User.findOne({ _id: sessionUser.userID });
+    const user = await User.findById( sessionUser.userID );
     // Check if current property is bookmarked
     let isBookmarked = user.bookmarks.includes(propertyID);
 
@@ -44,7 +44,7 @@ export const POST = async (request) => {
     }
 
     // Get user from DB
-    const user = await User.findOne({ _id: sessionUser.userID });
+    const user = await User.findById( sessionUser.userID );
 
     // Check if current property is bookmarked
     let isBookmarked = user.bookmarks.includes(propertyId);

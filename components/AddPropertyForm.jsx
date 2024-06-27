@@ -509,6 +509,7 @@ const AddPropertyForm = () => {
           name='seller_info.name'
           className='border rounded w-full py-2 px-3'
           placeholder='Name'
+          autoComplete='name'
           value={fields.seller_info.name}
           onChange={handleChange}
         />
@@ -538,6 +539,7 @@ const AddPropertyForm = () => {
           name='seller_info.phone'
           className='border rounded w-full py-2 px-3'
           placeholder='Phone'
+          autoComplete='tel-national'
           value={fields.seller_info.phone}
           onChange={handleChange}
         />
