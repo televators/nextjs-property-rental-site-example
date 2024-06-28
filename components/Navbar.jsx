@@ -19,34 +19,27 @@ const Navbar = () => {
   const profileDropdownRef = useRef(null);
   const pathname = usePathname();
 
-  const setAuthProviders = async () => {
-    const res = await getProviders();
-    setProviders(res);
-  };
-
   const toggleProfileDropdownState = () => {
     setIsProfileDropdownOpen((prev) => !prev);
   };
 
   const handleClickOutsideProfile = (e) => {
-    console.log(isProfileDropdownOpen);
-    // if (!isProfileDropdownOpen) {
-    //   console.log("...and profile menu isn't open");
-    //   return;
-    // }
-
-    // if (profileDropdownRef.current && !profileDropdownRef.current.contains(e.target)) {
-    //   console.log('...and the click was *not* inside the profile menu button.', isProfileDropdownOpen);
-    //   setIsProfileDropdownOpen((prev) => !prev);
-    // }
-  };
-
-  // Just so it's possible to remove the event listener in the cleanup function.
-  const closeMenu = () => {
-    setIsMenuOpen(false);
+    if (profileDropdownRef.current && !profileDropdownRef.current.contains(e.target)) {
+      setIsProfileDropdownOpen(false);
+    }
   };
 
   useEffect(() => {
+    const setAuthProviders = async () => {
+      const res = await getProviders();
+      setProviders(res);
+    };
+
+    // Just so it's possible to remove the event listener in the cleanup function.
+    const closeMenu = () => {
+      setIsMenuOpen(false);
+    };
+
     setAuthProviders();
 
     window.addEventListener('resize', closeMenu);
@@ -58,10 +51,6 @@ const Navbar = () => {
       document.removeEventListener('click', handleClickOutsideProfile);
     };
   }, []);
-
-  useEffect(() => {
-    console.log('Wuhhh', isProfileDropdownOpen);
-  }, [isProfileDropdownOpen]);
 
   return (
     <nav className='bg-blue-700 border-b border-blue-500'>
@@ -186,7 +175,8 @@ const Navbar = () => {
                     id='user-menu-button'
                     aria-expanded='false'
                     aria-haspopup='true'
-                    onClick={() => setIsProfileDropdownOpen((prev) => !prev)}>
+                    onClick={() => setIsProfileDropdownOpen((prev) => !prev)}
+                    ref={profileDropdownRef}>
                     <span className='absolute -inset-1.5'></span>
                     <span className='sr-only'>Open user menu</span>
                     <Image
@@ -201,11 +191,7 @@ const Navbar = () => {
 
                 {/* Profile dropdown */}
                 {isProfileDropdownOpen && (
-                  <ProfileDropdown
-                    ref={profileDropdownRef}
-                    signOut={signOut}
-                    toggleProfileDropdownState={toggleProfileDropdownState}
-                  />
+                  <ProfileDropdown signOut={signOut} toggleProfileDropdownState={toggleProfileDropdownState} />
                 )}
               </div>
             </div>

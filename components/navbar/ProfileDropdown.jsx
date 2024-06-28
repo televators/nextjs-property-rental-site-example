@@ -1,7 +1,6 @@
 import Link from 'next/link';
-import { forwardRef } from 'react';
 
-const ProfileDropdown = forwardRef(({ signOut, toggleProfileDropdownState }, ref) => {
+const ProfileDropdown = ({ signOut, toggleProfileDropdownState }) => {
   return (
     <div
       id='user-menu'
@@ -9,8 +8,7 @@ const ProfileDropdown = forwardRef(({ signOut, toggleProfileDropdownState }, ref
       role='menu'
       aria-orientation='vertical'
       aria-labelledby='user-menu-button'
-      tabIndex='-1'
-      ref={ref}>
+      tabIndex='-1'>
       <Link
         onClick={() => {
           toggleProfileDropdownState();
@@ -46,6 +44,6 @@ const ProfileDropdown = forwardRef(({ signOut, toggleProfileDropdownState }, ref
       </button>
     </div>
   );
-});
+};
 
 export default ProfileDropdown;
