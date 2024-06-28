@@ -13,7 +13,7 @@ import { getSessionUser } from "@/utils/getSessionUser";
 export const dynamic = 'force-dynamic';
 
 // GET /api/messages
-export const GET = async (request) => {
+export const GET = async (_request) => {
   try {
     await connectDB();
 
@@ -24,7 +24,7 @@ export const GET = async (request) => {
     }
 
     const { userID } = sessionUser;
-    const messages = await Message.find({recipient: userID }).populate('sender', 'name').populate('property', 'title');
+    const messages = await Message.find({recipient: userID }).populate('sender', 'username').populate('property', 'name');
 
     return Response.json( messages, { status: 200 } );
   } catch (error) {
