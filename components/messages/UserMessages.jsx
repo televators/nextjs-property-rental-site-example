@@ -15,7 +15,6 @@ const UserMessages = () => {
         if (res.status === 200) {
           const data = await res.json();
           setMessages(data);
-          console.log(data[0]);
         }
       } catch (error) {
         console.error('Error fetching user messages:', '\n', error);
