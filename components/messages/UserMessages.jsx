@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import Spinner from '@/components/Spinner';
 import MessageCard from './MessageCard';
 
+// TODO: Figure out how to deal with not being able to render a 'no messages' condition when the last message has been deleted. Currently, there's no obvious way to do this with this setup since messages is only set once on initial mount and the parent doesn't know the number of MessageCards. Is the only way really just to refetch all messages when you delete one? That feels wasteful and un-performant.
 const UserMessages = () => {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);

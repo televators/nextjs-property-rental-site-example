@@ -1,11 +1,12 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import getFormattedTimestamp from '@/utils/getFormattedTimestamp';
 import getFormattedPhone from '@/utils/getFormattedPhone';
 import { toast } from 'react-toastify';
 
 const MessageCard = ({ message }) => {
   const [isRead, setIsRead] = useState(message.read);
+  const [wasDeleted, setWasDeleted] = useState(false);
 
   const handleMarkAsRead = async () => {
     try {
@@ -30,7 +31,29 @@ const MessageCard = ({ message }) => {
       toast.error("There was an error changing message's status. Please try again.");
     }
   };
-  const handleDelete = async () => {};
+  const handleDelete = async () => {
+    try {
+      const res = await fetch(`/api/messages/${message._id}`, {
+        method: 'DELETE',
+      });
+
+      if (res.status === 200) {
+        setWasDeleted(true);
+        toast.success('Message deleted successfully.');
+      } else if (res.status >= 400 && res.status <= 499) {
+        toast.error('There was an error deleting the message.');
+      } else if (res.status === 500) {
+        toast.error('Server encountered an error, message may not have been deleted.');
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error('There was an error deleting the message. Please try again.');
+    }
+  };
+
+  if (wasDeleted) {
+    return null;
+  }
 
   return (
     <div className='relative bg-white [&:not(:last-child)]:mb-5 p-4 rounded-md shadow-md border border-gray-200'>
