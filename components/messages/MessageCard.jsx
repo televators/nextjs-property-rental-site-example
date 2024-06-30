@@ -2,11 +2,14 @@
 import { useState } from 'react';
 import getFormattedTimestamp from '@/utils/getFormattedTimestamp';
 import getFormattedPhone from '@/utils/getFormattedPhone';
+import { useGlobalContext } from '@/context/GlobalContext';
 import { toast } from 'react-toastify';
 
 const MessageCard = ({ message }) => {
   const [isRead, setIsRead] = useState(message.read);
   const [wasDeleted, setWasDeleted] = useState(false);
+
+  const { setUnreadCount } = useGlobalContext();
 
   const handleMarkAsRead = async () => {
     try {
@@ -16,7 +19,12 @@ const MessageCard = ({ message }) => {
 
       if (res.status === 200) {
         const read = await res.json();
+
+        // Update local state
         setIsRead(read);
+        // Update global state
+        setUnreadCount((prev) => (read ? prev - 1 : prev + 1));
+
         toast.success(`Message marked as ${isRead ? "'unread'" : "'read'"}.`);
       } else if (res.status > 200) {
         // API route returns standardized message property in response object for all
@@ -38,7 +46,11 @@ const MessageCard = ({ message }) => {
       });
 
       if (res.status === 200) {
+        // Mark deleted locally
         setWasDeleted(true);
+        // Update unread count if deleted message was unread
+        setUnreadCount((prev) => (isRead ? prev : prev - 1));
+
         toast.success('Message deleted successfully.');
       } else if (res.status >= 400 && res.status <= 499) {
         toast.error('There was an error deleting the message.');
@@ -93,7 +105,8 @@ const MessageCard = ({ message }) => {
 
       <button
         onClick={handleMarkAsRead}
-        className={`${isRead ? 'bg-slate-500' : 'bg-blue-500'} mt-4 mr-3 text-white py-1 px-3 rounded-md`}>
+        className={`${isRead ? 'bg-slate-500' : 'bg-blue-500'} mt-4 mr-3 text-white py-1 px-3 rounded-md`}
+      >
         Mark As {isRead ? 'Unread' : 'Read'}
       </button>
       <button onClick={handleDelete} className='mt-4 bg-red-500 text-white py-1 px-3 rounded-md'>

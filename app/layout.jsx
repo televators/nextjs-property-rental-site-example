@@ -1,3 +1,4 @@
+import { GlobalProvider } from '@/context/GlobalContext';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import '@/assets/styles/globals.css';
@@ -14,16 +15,18 @@ export const metadata = {
 
 const MainLayout = ({ children }) => {
   return (
-    <AuthProvider>
-      <html lang='en'>
-        <body>
-          <Navbar />
-          <main>{children}</main>
-          <Footer />
-          <ToastContainer />
-        </body>
-      </html>
-    </AuthProvider>
+    <GlobalProvider>
+      <AuthProvider>
+        <html lang='en'>
+          <body>
+            <Navbar />
+            <main>{children}</main>
+            <Footer />
+            <ToastContainer />
+          </body>
+        </html>
+      </AuthProvider>
+    </GlobalProvider>
   );
 };
 
