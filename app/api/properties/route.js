@@ -5,13 +5,34 @@ import cloudinary from "@/config/cloudinary";
 import { revalidatePath } from "next/cache";
 
 // GET /api/properties
+// NOTE: If requesting the plain route itself, will return all properties in a simple array. If there are query params, checks for paging and returns object with count and properties themselves.
 export const GET = async ( request ) => {
   try {
     await connectDB();
 
-    const properties = await Property.find( {} );
+    const { searchParams } = new URL(request.url);
 
-    return Response.json( properties, { status: 200 } );
+    if ( [...searchParams].length > 0 ) {
+      const page = searchParams.get('page') || 1;
+      const pageSize = searchParams.get('page-size') || 3;
+
+      const skip = (page - 1) * pageSize;
+
+      const propertiesCount = await Property.countDocuments({});
+      const properties = await Property.find({}).skip(skip).limit(pageSize);
+
+      const result = {
+        propertiesCount,
+        properties,
+      };
+
+      return Response.json( result, { status: 200 } );
+    } else {
+      const properties = await Property.find({});
+
+      return Response.json( properties, { status: 200 } );
+    }
+
   } catch ( error ) {
     console.error( error );
 
