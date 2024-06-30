@@ -1,30 +1,51 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Mock Property Rental Site Built with Next.js 14
+Full CRUD for properties, user authentication and messaging, and searching and bookmarking properties.
+---
+## Features
+- User authentication with Google and Next Auth
+- User authorization
+- User profile with user listings
+- Internal user messaging with 'unread' notifications
+- Route protection
+- Property/User data validation and formatting
+- Property Listing CRUD
+- Property Listing multi-image upload to Cloudinary
+- Property Listing search
+- Photoswipe image gallery
+- Mapbox maps
+- Toast notifications
+- Property Listing bookmarking
+- Property Listing sharing to social media
+- Responsive UI with Tailwind CSS
+- Custom 404 page
 
-## Getting Started
+## Packages Used
+- Next.js
+- React.js
+- Tailwind CSS
+- MongoDB
+- Mongoose
+- NextAuth.js
+- Validator.js
+- React Icons
+- Cloudinary
+- Mapbox
+- React Map GL
+- React Geocode
+- React Spinners
+- React Toastify
+- React Share
+- Chalk (for nicer DX)
 
-First, run the development server:
+## Miscellaneous
+Built with Node v20; .nvmrc in repo.
 
-```bash
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## High Level TODOs
+- Tighten up and polish UI design since it's pretty wonky all over.
+- Convert most client components into server ones since all they're doing is fetching data usually. Use server actions.
+- Add model imports in any component that even *thinks* about referencing them because Mongoose has occasional random hiccups with models not being defined and necessitates restarting server.
+- Rewrite property fetching utils from early on to actually account for most (or all... unless?) cases, or get rid of it entirely if it doesn't make sense anymore.
+- Abstract some redundant shiz into utils or components, DRY things up.
+- Add .eslintrc, ensure everything gets reformatted since I'm not happy with Prettier.
+- Skim through and ensure naming is still sensible, add comments.
+- Eventually fork a TypeScript version.
