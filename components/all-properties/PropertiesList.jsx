@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import PropertyCard from '@/components/PropertyCard';
+import Pagination from '@/components/all-properties/Pagination';
 import Spinner from '@/components/Spinner';
 
 const PropertiesList = () => {
@@ -9,8 +10,12 @@ const PropertiesList = () => {
   const [page, setPage] = useState(1);
   // TODO: Before launch, set initial pageSize to 9 so the page loads a full page at first, then set pageSize to 3 or 6 after initial load. Will have to add like fifteen more properties to DB.
   // const [pageSize, setPageSize] = useState(9);
-  const [pageSize, setPageSize] = useState(3);
+  const [pageSize, setPageSize] = useState(6);
   const [resultsCount, setResultsCount] = useState(0);
+
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+  };
 
   useEffect(() => {
     const getProperties = async () => {
@@ -36,7 +41,7 @@ const PropertiesList = () => {
     };
 
     getProperties();
-  }, []);
+  }, [page, pageSize]);
 
   return loading ? (
     <Spinner />
@@ -46,11 +51,15 @@ const PropertiesList = () => {
         {properties.length === 0 ? (
           <h2>No properties found.</h2>
         ) : (
-          <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
-            {properties.map((property) => (
-              <PropertyCard key={property._id} property={property} />
-            ))}
-          </div>
+          <>
+            <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
+              {properties.map((property) => (
+                <PropertyCard key={property._id} property={property} />
+              ))}
+            </div>
+
+            <Pagination page={page} pageSize={pageSize} resultsCount={resultsCount} onPageChange={handlePageChange} />
+          </>
         )}
       </div>
     </section>

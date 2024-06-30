@@ -77,7 +77,7 @@ const PropertyCard = ({ property, enableBookmarkToggle }) => {
           </div>
         </div>
 
-        <h3 className='absolute top-[10px] right-[10px] bg-white px-4 py-2 rounded-lg text-blue-500 font-bold text-right md:text-center lg:text-right'>
+        <h3 className='absolute top-[10px] right-[10px] bg-white shadow-md px-4 py-2 rounded-lg text-blue-500 font-bold text-right md:text-center lg:text-right'>
           {getRateDisplay()}
         </h3>
 
@@ -119,14 +119,16 @@ const PropertyCard = ({ property, enableBookmarkToggle }) => {
         <div className='flex flex-col lg:flex-row justify-end gap-3'>
           <Link
             href={`/properties/${property._id}`}
-            className='h-[36px] bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-center text-sm'>
+            className='bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-center text-md'
+          >
             Details
           </Link>
 
           {enableBookmarkToggle && (
             <button
               onClick={handleClick}
-              className={`bg-red-500 hover:bg-red-600 text-white text-sm font-bold py-2 px-4 rounded-lg flex items-center justify-center`}>
+              className={`bg-red-500 hover:bg-red-600 text-white text-sm font-bold py-2 px-4 rounded-lg flex items-center justify-center`}
+            >
               <FaBookmark className='mr-2' /> Remove
             </button>
           )}

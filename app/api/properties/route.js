@@ -14,7 +14,8 @@ export const GET = async ( request ) => {
 
     if ( [...searchParams].length > 0 ) {
       const page = searchParams.get('page') || 1;
-      const pageSize = searchParams.get('page-size') || 3;
+      // TODO: Before launch, set initial pageSize to 9 so the page loads a full page at first, then set pageSize to 3 or 6 after initial load. Will have to add like fifteen more properties to DB.
+      const pageSize = searchParams.get('page-size') || 6;
 
       const skip = (page - 1) * pageSize;
 
