@@ -46,6 +46,7 @@ Built with Node v20; .nvmrc in repo.
 - Add model imports in any component that even *thinks* about referencing them because Mongoose has occasional random hiccups with models not being defined and necessitates restarting server.
 - Rewrite property fetching utils from early on to actually account for most (or all... unless?) cases, or get rid of it entirely if it doesn't make sense anymore.
 - Abstract some redundant shiz into utils or components, DRY things up.
+- Fix mixed naming for component directories, reshuffle components directory itself
 - Add .eslintrc, ensure everything gets reformatted since I'm not happy with Prettier.
 - Skim through and ensure naming is still sensible, add comments.
 - Eventually fork a TypeScript version.
