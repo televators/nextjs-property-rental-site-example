@@ -4,6 +4,7 @@ import { getSessionUser } from "@/utils/getSessionUser";
 import cloudinary from "@/config/cloudinary";
 import { revalidatePath } from "next/cache";
 
+// ☐ Migrated to Server Action
 // GET /api/properties
 // NOTE: If requesting the plain route itself, will return all properties in a simple array. If there are query params, checks for paging and returns object with count and properties themselves.
 export const GET = async ( request ) => {
@@ -41,6 +42,8 @@ export const GET = async ( request ) => {
   }
 };
 
+// ✅ Migrated to Server ACtion
+// POST /api/properties
 export const POST = async ( request ) => {
   try {
     await connectDB();
