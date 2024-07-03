@@ -8,7 +8,6 @@ import BackToAll from '@/components/single_property/BackToAll';
 import PropertyDetails from '@/components/single_property/PropertyDetails';
 import PropertyAllImages from '@/components/single_property/PropertyAllImages';
 import PropertySidebar from '@/components/single_property/PropertySidebar';
-import chalk from 'chalk';
 
 const PropertyPage = async ({ params }) => {
   const PUBLIC_DOMAIN = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000';

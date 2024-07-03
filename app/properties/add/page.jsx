@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import AddPropertyForm from '@/components/AddPropertyForm';
+import AddPropertyForm from '@/components/add-edit-property/AddPropertyForm';
 
 const PropertyAddPage = () => {
   const validPropertyTypes = mongoose.model('Property').schema.path('type').enumValues;
