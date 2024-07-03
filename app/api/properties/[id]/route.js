@@ -18,10 +18,11 @@ export const GET = async ( request, { params } ) => {
   } catch ( error ) {
     console.error( error );
 
-    return new Response( 'Something went wrong when fetching single property.', { status: 500 } );
+    return new Response( 'Error fetching single property.', { status: 500 } );
   }
 };
 
+// ✅ Migrated to Server Action
 // PUT /api/properties/:id
 export const PUT = async ( request, { params } ) => {
   try {
@@ -42,14 +43,14 @@ export const PUT = async ( request, { params } ) => {
     const amenities = formData.getAll( 'amenities' );
 
     // Get existing property by ID
-    const exisitingProperty = await Property.findById( propertyID );
+    const existingProperty = await Property.findById( propertyID );
 
-    if ( ! exisitingProperty ) {
+    if ( ! existingProperty ) {
       return new Response( 'Property not found.', { status: 404 } );
     }
 
     // Verify ownership
-    if ( exisitingProperty.owner.toString() !== userID ) {
+    if ( existingProperty.owner.toString() !== userID ) {
       return new Response("Unauthorized: user doesn't own requested property.", { status: 401 });
     }
 
@@ -90,7 +91,7 @@ export const PUT = async ( request, { params } ) => {
     return Response.json( updatedProperty, { status: 200 } );
   } catch ( error ) {
     console.log( error );
-    return new Response( 'Faileure adding property', { status: 500 } );
+    return new Response( 'Error adding property.', { status: 500 } );
   }
 };
 
@@ -141,6 +142,6 @@ export const DELETE = async ( request, { params } ) => {
   } catch ( error ) {
     console.error( error );
 
-    return new Response( 'Something went wrong trying to delete property.', { status: 500 } );
+    return new Response( 'Error trying to delete property.', { status: 500 } );
   }
 };

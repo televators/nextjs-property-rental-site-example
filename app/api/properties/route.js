@@ -6,7 +6,7 @@ import { revalidatePath } from "next/cache";
 
 // ☐ Migrated to Server Action
 // GET /api/properties
-// NOTE: If requesting the plain route itself, will return all properties in a simple array. If there are query params, checks for paging and returns object with count and properties themselves.
+// NOTE: If requesting the plain route itself, will return all properties in a simple array. If there are query params, checks for paging and returns object with count and properties.
 export const GET = async ( request ) => {
   try {
     await connectDB();
@@ -15,7 +15,6 @@ export const GET = async ( request ) => {
 
     if ( [...searchParams].length > 0 ) {
       const page = searchParams.get('page') || 1;
-      // TODO: Before launch, set initial pageSize to 9 so the page loads a full page at first, then set pageSize to 3 or 6 after initial load. Will have to add like fifteen more properties to DB.
       const pageSize = searchParams.get('page-size') || 6;
 
       const skip = (page - 1) * pageSize;
@@ -38,7 +37,7 @@ export const GET = async ( request ) => {
   } catch ( error ) {
     console.error( error );
 
-    return new Response( 'Something went wrong', { status: 500 } );
+    return new Response( 'Error fetching properties.', { status: 500 } );
   }
 };
 
@@ -125,11 +124,9 @@ export const POST = async ( request ) => {
     // for the new property when user visits /properties.
     revalidatePath( '/properties' );
     // Redirect to new single Property
-    // TODO: Add popup asking if you want to see new single, add another, or go to all Properties.
     return Response.redirect( `${ process.env.NEXTAUTH_URL }/properties/${ newProperty._id }` );
-    // return Response.json( { message: 'Great success' }, { status: 200 } );
   } catch ( error ) {
     console.log( error );
-    return new Response( 'Faileure adding property', { status: 500 } );
+    return new Response( 'Error adding property', { status: 500 } );
   }
 };
