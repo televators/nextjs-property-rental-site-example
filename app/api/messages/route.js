@@ -12,30 +12,6 @@ import { getSessionUser } from "@/utils/getSessionUser";
 
 export const dynamic = 'force-dynamic';
 
-// GET /api/messages
-export const GET = async (_request) => {
-  try {
-    await connectDB();
-
-    const sessionUser = await getSessionUser();
-
-    if ( ! sessionUser || ! sessionUser.user ) {
-      return new Response('You must be signed in to view messages.', { status: 401 });
-    }
-
-    const { userID } = sessionUser;
-    const messages = await Message.find({recipient: userID }).populate('sender', 'username').populate('property', 'name').sort({read: 'asc', createdAt: 'desc'});
-
-    return Response.json( messages, { status: 200 } );
-  } catch (error) {
-    console.error('Error getting messages.', '\n', error);
-
-    return Response.json({
-      message: 'Error getting messages.',
-    }, { status: 500 });
-  }
-};
-
 // POST /api/messages
 export const POST = async (request) => {
   try {

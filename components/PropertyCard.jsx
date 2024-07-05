@@ -1,6 +1,4 @@
 'use client';
-// import { useState } from 'react';
-import { useRouter } from 'next/router';
 import Image from 'next/image';
 import Link from 'next/link';
 import { toast } from 'react-toastify';
@@ -15,15 +13,6 @@ const PropertyCard = ({ property, enableBookmarkToggle }) => {
   // const [wasRemoved, setWasRemoved] = useState(false);
 
   const getRateDisplay = () => {
-    //#region Perf Prof Maybz
-    // TODO: Profile this basic usage of Number.prototype.toLocaleString() against Intl.NumberFormat for this setup. Curious how much of an impact it is. See about generating 90 more properties for performance test.
-    // return new Intl.NumberFormat( 'en-US', {
-    //   style: 'currency',
-    //   currency: 'USD',
-    //   currencyDisplay: 'symbol'
-    // } ).format( rates.nightly );
-    //#endregion
-
     if (rates.monthly) {
       return `${'$' + rates.monthly.toLocaleString()}/mo`;
     } else if (rates.weekly) {
