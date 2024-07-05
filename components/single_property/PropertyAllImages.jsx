@@ -30,6 +30,8 @@ const PropertyAllImages = ({ images }) => {
                   <Item original={image} thumbnail={image} width='1000' height='560'>
                     {({ ref, open }) => (
                       <Image
+                        ref={ref}
+                        onClick={open}
                         src={image}
                         alt=''
                         className='object-cover h-[400px] w-full rounded-xl'
@@ -37,8 +39,6 @@ const PropertyAllImages = ({ images }) => {
                         height={0}
                         sizes='100vw'
                         priority={true}
-                        ref={ref}
-                        onClick={open}
                       />
                     )}
                   </Item>

@@ -1,3 +1,4 @@
+// TODO: After refactor is complete, this shouldn't be needed. If so, delete.
 import connectDB from "@/config/database";
 import Property from "@/models/Property";
 

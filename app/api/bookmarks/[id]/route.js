@@ -5,6 +5,8 @@ import { getSessionUser } from "@/utils/getSessionUser";
 // Needed for prod on Vercel for some reason.
 export const dynamic = 'force-dynamic';
 
+// TODO: Shouldn't need the GET once refactor is finished. Check and delete if so after refactor.
+// GET /api/bookmarks/:id
 export const GET = async (request, { params }) => {
   try {
     await connectDB();
@@ -32,6 +34,7 @@ export const GET = async (request, { params }) => {
   }
 };
 
+// POST /api/bookmarks/:id
 export const POST = async (request) => {
   try {
     await connectDB();
