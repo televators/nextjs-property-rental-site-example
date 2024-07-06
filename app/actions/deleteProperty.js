@@ -1,31 +1,15 @@
-import { revalidatePath } from "next/cache";
-import connectDB from "@/config/database";
-import Property from '@/models/Property';
-import { getSessionUser } from "@/utils/getSessionUser";
+'use server';
 import cloudinary from "@/config/cloudinary";
+import connectDB from "@/config/database";
+import Property from "@/models/Property";
+import { getSessionUser } from "@/utils/getSessionUser";
+import { revalidatePath } from "next/cache";
 
-// GET /api/properties/:id
-export const GET = async ( request, { params } ) => {
+async function deleteProperty( propertyID ) {
   try {
     await connectDB();
 
-    const { id: propertyID } = params;
-    const property = await Property.findById( propertyID );
-
-    if ( ! property ) return new Response( 'Property not found.', { status: 404 } );
-
-    return Response.json( property, { status: 200 } );
-  } catch ( error ) {
-    console.error( error );
-
-    return new Response( 'Error fetching single property.', { status: 500 } );
-  }
-};
-
-// DELETE /api/properties/:id
-export const DELETE = async ( request, { params } ) => {
-  try {
-    const propertyID = params.id;
+    //#region User Authentication & Authorization
     const sessionUser = await getSessionUser();
 
     if ( ! sessionUser || ! sessionUser.userID ) {
@@ -33,22 +17,25 @@ export const DELETE = async ( request, { params } ) => {
     }
 
     const { userID } = sessionUser;
+    //#endregion
 
-    await connectDB();
-
+    //#region Get & Validate Property
     const property = await Property.findById( propertyID );
 
-    if ( ! property ) return new Response( 'Property not found.', { status: 404 } );
+    if ( ! property ) throw new Error( 'Property not found.' );
 
     // Verify current user owns property to be deleted
     if ( property.owner.toString() !== userID ) {
-      return new Response( "Unauthorized: current user doesn't own requested property.", { status: 401 } );
+      throw new Error( "Unauthorized: current user doesn't own requested property." );
     }
+    //#endregion
 
+    //#region Delete associated images from Cloudinary
     // Extract public IDs from Cloudinary image URL in DB
     const publicIDs = property.images.map( ( imageURL ) => {
       const parts = imageURL.split('/');
 
+      // Splits off the image's public ID from the full URL
       return parts.at( -1 ).split( '.' ).at( 0 );
     } );
 
@@ -58,17 +45,16 @@ export const DELETE = async ( request, { params } ) => {
         await cloudinary.uploader.destroy( `propertypulse/${ publicID }` )
       }
     }
+    //#endregion
 
     // After deleting image from Cloudinary, delete the property
     await property.deleteOne();
 
     // After property and associated images have been deleted, revalidate the cache for the Properties page
     revalidatePath('/properties', 'page');
-
-    return new Response( 'Property deleted successfully.', { status: 200 } );
-  } catch ( error ) {
-    console.error( error );
-
-    return new Response( 'Error trying to delete property.', { status: 500 } );
+  } catch (error) {
+    console.error(error);
   }
-};
+}
+
+export default deleteProperty;

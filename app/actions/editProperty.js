@@ -12,7 +12,7 @@ async function editProperty( propertyID, formData ) {
   const sessionUser = await getSessionUser();
 
   if ( ! sessionUser || ! sessionUser.userID ) {
-    return new Response( 'User ID is required.', { status: 401 } );
+    throw new Error( 'User ID is required.' );
   }
 
   const { userID } = sessionUser;
@@ -23,7 +23,7 @@ async function editProperty( propertyID, formData ) {
 
   // Verify ownership
   if ( existingProperty.owner.toString() !== userID ) {
-    return new Response("Unauthorized: user doesn't own requested property.", { status: 401 });
+    throw new Error( "Unauthorized: user doesn't own requested property." );
   }
 
   //#region Create Property data object for database
