@@ -63,7 +63,7 @@ async function editProperty( propertyID, formData ) {
   //#endregion
 
   //#region Update Property in DB with new data
-  const updatedProperty = await Property.findByIdAndUpdate(propertyID, propertyData);
+  const updatedProperty = await Property.findByIdAndUpdate( propertyID, propertyData );
 
   // NOTE: Invalidate cache so that the image is fetched for the new property when
   // user next visits /properties. Since properties are on most pages, we can just
