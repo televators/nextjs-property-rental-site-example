@@ -1,4 +1,6 @@
 import connectDB from '@/config/database';
+// HACK: Prevents random and infrequent issue where Mongoose loads things out of order.
+import Property from '@/models/Property';
 import User from '@/models/User';
 import { getSessionUser } from '@/utils/getSessionUser';
 import PropertyCard from '@/components/PropertyCard';

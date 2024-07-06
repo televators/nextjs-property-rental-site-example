@@ -41,6 +41,7 @@ Full CRUD for properties, user authentication and messaging, and searching and b
 Built with Node v20; .nvmrc in repo.
 
 ## High Level TODOs
+- Add metadata config for all actual pages
 - Tighten up and polish UI design since it's pretty wonky all over.
 - Convert most client components into server ones since all they're doing is fetching data usually. Use server actions.
 - Add model imports in any component that even *thinks* about referencing them because Mongoose has occasional random hiccups with models not being defined and necessitates restarting server.

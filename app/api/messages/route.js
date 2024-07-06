@@ -1,6 +1,8 @@
 import connectDB from "@/config/database";
 import Message from "@/models/Message";
+// HACK: Prevents random and infrequent issue where Mongoose loads things out of order.
 import Property from "@/models/Property";
+// HACK: Prevents random and infrequent issue where Mongoose loads things out of order.
 import User from "@/models/User";
 import { getSessionUser } from "@/utils/getSessionUser";
 

@@ -1,6 +1,5 @@
 import PropertyCard from '@/components/PropertyCard';
 import Pagination from '@/components/all-properties/Pagination';
-import { convertToSerializableObject } from '@/utils/convertToObject';
 
 const PropertiesList = ({ properties, resultsCount, page, pageSize }) => {
   return (

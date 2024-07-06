@@ -6,7 +6,6 @@ import Link from 'next/link';
 import Spinner from '@/components/Spinner';
 import { toast } from 'react-toastify';
 import profileDefault from '@/assets/images/profile.png';
-import { revalidatePath } from 'next/cache';
 
 const ProfilePage = () => {
   const { data: session } = useSession();
@@ -138,14 +137,16 @@ const ProfilePage = () => {
                     <div className='mt-2'>
                       <Link
                         href={`/properties/${property._id}/edit`}
-                        className='bg-blue-500 text-white px-3 py-3 rounded-md mr-2 hover:bg-blue-600'>
+                        className='bg-blue-500 text-white px-3 py-3 rounded-md mr-2 hover:bg-blue-600'
+                      >
                         Edit
                       </Link>
 
                       <button
                         className='bg-red-500 text-white px-3 py-3 rounded-md hover:bg-red-600'
                         type='button'
-                        onClick={() => handleDeleteProperty(property._id)}>
+                        onClick={() => handleDeleteProperty(property._id)}
+                      >
                         Delete
                       </button>
                     </div>

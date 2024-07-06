@@ -7,6 +7,9 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import 'photoswipe/dist/photoswipe.css';
 
+// TODO: New route group for photoswipe and toastify maybe
+
+// TODO: Setup metadata for all pages instead of just pulling this global one
 export const metadata = {
   title: 'Property Pulse | Find the perfect rental',
   description:
