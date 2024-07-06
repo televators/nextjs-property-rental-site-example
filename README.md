@@ -42,6 +42,7 @@ Built with Node v20; .nvmrc in repo.
 
 ## High Level TODOs
 - Add metadata config for all actual pages
+- Check protected routes (for auth'd users) and remove redundant defensive checks for sessionUser and such since if their not logged in, they won't get to these pages in the first place.
 - Tighten up and polish UI design since it's pretty wonky all over.
 - Convert most client components into server ones since all they're doing is fetching data usually. Use server actions.
 - Add model imports in any component that even *thinks* about referencing them because Mongoose has occasional random hiccups with models not being defined and necessitates restarting server.
