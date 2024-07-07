@@ -53,7 +53,7 @@ async function deleteProperty( propertyID ) {
     // After property and associated images have been deleted, revalidate the cache for the Properties page
     revalidatePath('/properties', 'page');
   } catch (error) {
-    console.error(error);
+    throw new Error( error );
   }
 }
 

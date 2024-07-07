@@ -8,7 +8,8 @@ const ProfileDropdown = ({ signOut, toggleProfileDropdownState }) => {
       role='menu'
       aria-orientation='vertical'
       aria-labelledby='user-menu-button'
-      tabIndex='-1'>
+      tabIndex='-1'
+    >
       <Link
         onClick={() => {
           toggleProfileDropdownState();
@@ -17,7 +18,8 @@ const ProfileDropdown = ({ signOut, toggleProfileDropdownState }) => {
         className='block px-4 py-2 text-sm text-gray-700'
         role='menuitem'
         tabIndex='-1'
-        id='user-menu-item-0'>
+        id='user-menu-item-0'
+      >
         Your Profile
       </Link>
       <Link
@@ -28,7 +30,8 @@ const ProfileDropdown = ({ signOut, toggleProfileDropdownState }) => {
         className='block px-4 py-2 text-sm text-gray-700'
         role='menuitem'
         tabIndex='-1'
-        id='user-menu-item-2'>
+        id='user-menu-item-2'
+      >
         Saved Properties
       </Link>
       <button
@@ -37,9 +40,10 @@ const ProfileDropdown = ({ signOut, toggleProfileDropdownState }) => {
           signOut();
         }}
         id='user-menu-item-2'
-        className='block px-4 py-2 text-sm text-gray-700'
+        className='block [inline-size:inherit] px-4 py-2 text-left text-sm text-gray-700'
         role='menuitem'
-        tabIndex='-1'>
+        tabIndex='-1'
+      >
         Sign Out
       </button>
     </div>

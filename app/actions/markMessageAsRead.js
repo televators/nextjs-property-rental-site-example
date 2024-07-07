@@ -4,7 +4,7 @@ import Message from '@/models/Message';
 import { getSessionUser } from '@/utils/getSessionUser';
 import { revalidatePath } from 'next/cache';
 
-async function deleteMessage( messageID ) {
+async function markMessageAsRead( messageID ) {
   try {
     await connectDB();
 
@@ -16,7 +16,7 @@ async function deleteMessage( messageID ) {
     const { userID } = sessionUser;
     //#endregion
 
-    //#region Search for Message, verify ownership, revalidate page, and delete the Message
+    //#region Search for Message, verify ownership, flip the 'read' status
     const message = await Message.findById( messageID );
 
     if ( ! message ) throw new Error( 'Message not found' );
@@ -24,13 +24,20 @@ async function deleteMessage( messageID ) {
     // Verify ownership
     if ( message.recipient.toString() !== userID ) throw new Error( 'Unauthorized' );
 
-    // revalidate cache
+    // Flip 'read' status
+    message.read = !message.read;
+
+    // Revalidate cache
     revalidatePath( '/messages', 'page' );
-    await message.deleteOne();
+
+    // Save the new status
+    await message.save();
+
+    return message.read;
     //#endregion
-  } catch ( error ) {
-    throw new Error( error );
+  } catch (error) {
+    throw new Error(error);
   }
 }
 
-export default deleteMessage;
+export default markMessageAsRead;

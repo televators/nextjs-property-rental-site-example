@@ -4,6 +4,8 @@ import getFormattedTimestamp from '@/utils/getFormattedTimestamp';
 import getFormattedPhone from '@/utils/getFormattedPhone';
 import { useGlobalContext } from '@/context/GlobalContext';
 import { toast } from 'react-toastify';
+import markMessageAsRead from '@/app/actions/markMessageAsRead';
+import deleteMessage from '@/app/actions/deleteMessage';
 
 const MessageCard = ({ message }) => {
   const [isRead, setIsRead] = useState(message.read);
@@ -12,55 +14,23 @@ const MessageCard = ({ message }) => {
   const { setUnreadCount } = useGlobalContext();
 
   const handleMarkAsRead = async () => {
-    try {
-      const res = await fetch(`/api/messages/${message._id}`, {
-        method: 'PUT',
-      });
+    const read = await markMessageAsRead(message._id);
 
-      if (res.status === 200) {
-        const read = await res.json();
+    // Update local state
+    setIsRead(read);
+    // Update global state
+    setUnreadCount((prev) => (read ? prev - 1 : prev + 1));
 
-        // Update local state
-        setIsRead(read);
-        // Update global state
-        setUnreadCount((prev) => (read ? prev - 1 : prev + 1));
-
-        toast.success(`Message marked as ${isRead ? "'unread'" : "'read'"}.`);
-      } else if (res.status > 200) {
-        // API route returns standardized message property in response object for all
-        // pertinent statuses; consume them here instead of hardcoding messages redundantly.
-        const resMessage = await res.json().then((data) => data.message);
-
-        console.error(resMessage);
-        toast.error("There was an error changing message's status. Please try again.");
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error("There was an error changing message's status. Please try again.");
-    }
+    toast.success(`Message marked as ${isRead ? "'new'" : "'read'"}.`);
   };
+
   const handleDelete = async () => {
-    try {
-      const res = await fetch(`/api/messages/${message._id}`, {
-        method: 'DELETE',
-      });
+    await deleteMessage(message._id);
 
-      if (res.status === 200) {
-        // Mark deleted locally
-        setWasDeleted(true);
-        // Update unread count if deleted message was unread
-        setUnreadCount((prev) => (isRead ? prev : prev - 1));
+    setWasDeleted(true);
+    setUnreadCount((prevCount) => (isRead ? prevCount : prevCount - 1));
 
-        toast.success('Message deleted successfully.');
-      } else if (res.status >= 400 && res.status <= 499) {
-        toast.error('There was an error deleting the message.');
-      } else if (res.status === 500) {
-        toast.error('Server encountered an error, message may not have been deleted.');
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error('There was an error deleting the message. Please try again.');
-    }
+    toast.success('Message Deleted');
   };
 
   if (wasDeleted) {
@@ -107,7 +77,7 @@ const MessageCard = ({ message }) => {
         onClick={handleMarkAsRead}
         className={`${isRead ? 'bg-slate-500' : 'bg-blue-500'} mt-4 mr-3 text-white py-1 px-3 rounded-md`}
       >
-        Mark As {isRead ? 'Unread' : 'Read'}
+        Mark As {isRead ? 'New' : 'Read'}
       </button>
       <button onClick={handleDelete} className='mt-4 bg-red-500 text-white py-1 px-3 rounded-md'>
         Delete
