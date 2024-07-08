@@ -1,64 +1,45 @@
 'use client';
 import { useState } from 'react';
+import { useFormStatus, useFormState } from 'react-dom';
 import { useSession } from 'next-auth/react';
 import { FaPaperPlane } from 'react-icons/fa';
 import { toast } from 'react-toastify';
+import sendMessage from '@/app/actions/sendMessage';
 
+function MessageSubmitButton() {
+  const { pending } = useFormStatus();
+
+  return (
+    <button
+      className='bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full w-full focus:bg-blue-700 focus:shadow-outline flex items-center justify-center'
+      type='submit'
+      disabled={pending}
+    >
+      <FaPaperPlane className='mr-2' /> {pending ? 'Sending...' : 'Send Message'}
+    </button>
+  );
+}
+
+// NOTE: useFormState is broken in Next.js v14.2.4 (current latest). At time of writing, using v14.1.0 as useFormState works reliably. In v14.2.4, the formState isn't set correctly and either gets continuously reset to initial state value or when it gets set, resets itself and triggers re-renders. Can't use the formState for anything since it's completely unreliable.
 const PropertyContactForm = ({ property }) => {
   const { data: session } = useSession();
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
-  const [phone, setPhone] = useState('');
   const [wasSubmitted, setWasSubmitted] = useState(false);
 
-  const clearFields = () => {
-    setName('');
-    setEmail('');
-    setMessage('');
-    setPhone('');
-  };
+  const handleSubmit = async (prevState, formData) => {
+    const result = await sendMessage(prevState, formData);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const data = {
-      name,
-      email,
-      phone,
-      message,
-      recipient: property.owner,
-      property: property._id,
-    };
-
-    try {
-      const res = await fetch('/api/messages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
-      // API route returns standardized message property in response object for all
-      // pertinent statuses; consume them here instead of hardcoding messages redundantly.
-      const resMessage = await res.json().then((data) => data.message);
-
-      if (res.status === 200) {
-        setWasSubmitted(true);
-        clearFields();
-        toast.success(resMessage);
-      } else if (res.status === 400) {
-        toast.error(resMessage);
-        console.error(resMessage);
-      } else {
-        toast.error('Error sending message. Please try again.');
-        console.error(resMessage);
-      }
-    } catch (error) {
-      toast.error('Server encountered an error while sending message.');
-      console.error(error);
+    if (result.error) {
+      toast.error(result.error);
+    } else if (result.submitted) {
+      setWasSubmitted(true);
+      toast.success('Message sent.');
     }
   };
+
+  const [formState, formAction] = useFormState(handleSubmit, {
+    submitted: false,
+    error: false,
+  });
 
   return (
     <div className='bg-white p-6 rounded-lg shadow-md'>
@@ -68,7 +49,11 @@ const PropertyContactForm = ({ property }) => {
       ) : wasSubmitted ? (
         <p className='text-green-500 mb-4'>Message sent successfully.</p>
       ) : (
-        <form onSubmit={handleSubmit}>
+        <form action={formAction}>
+          {/* NOTE: Hidden inputs for Property ID and Owner */}
+          <input type='hidden' name='property' defaultValue={property._id} />
+          <input type='hidden' name='recipient' defaultValue={property.owner} />
+
           <div className='mb-4'>
             <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor='name'>
               Name:
@@ -77,10 +62,9 @@ const PropertyContactForm = ({ property }) => {
               className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
               id='name'
               type='text'
+              name='name'
               placeholder='Your name'
               required
-              value={name}
-              onChange={(e) => setName(e.target.value)}
             />
           </div>
 
@@ -92,10 +76,9 @@ const PropertyContactForm = ({ property }) => {
               className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
               id='email'
               type='email'
+              name='email'
               placeholder='Your email'
               required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
 
@@ -107,10 +90,9 @@ const PropertyContactForm = ({ property }) => {
               className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
               id='phone'
               type='text'
+              name='phone'
               placeholder='Your phone number'
               autoComplete='tel-national'
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
             />
           </div>
 
@@ -121,17 +103,13 @@ const PropertyContactForm = ({ property }) => {
             <textarea
               className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 h-44 focus:outline-none focus:shadow-outline'
               id='message'
+              name='message'
               placeholder='Your message'
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}></textarea>
+            ></textarea>
           </div>
 
           <div>
-            <button
-              className='bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full w-full focus:bg-blue-700 focus:shadow-outline flex items-center justify-center'
-              type='submit'>
-              <FaPaperPlane className='mr-2' /> Send Message
-            </button>
+            <MessageSubmitButton />
           </div>
         </form>
       )}
