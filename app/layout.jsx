@@ -1,9 +1,9 @@
+import AuthProvider from '@/components/AuthProvider';
 import { GlobalProvider } from '@/context/GlobalContext';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import '@/assets/styles/globals.css';
-import AuthProvider from '@/components/AuthProvider';
 import { ToastContainer } from 'react-toastify';
+import '@/assets/styles/globals.css';
 import 'react-toastify/dist/ReactToastify.css';
 import 'photoswipe/dist/photoswipe.css';
 
@@ -19,8 +19,8 @@ export const metadata = {
 
 const MainLayout = ({ children }) => {
   return (
-    <GlobalProvider>
-      <AuthProvider>
+    <AuthProvider>
+      <GlobalProvider>
         <html lang='en'>
           <body>
             <Navbar />
@@ -29,8 +29,8 @@ const MainLayout = ({ children }) => {
             <ToastContainer />
           </body>
         </html>
-      </AuthProvider>
-    </GlobalProvider>
+      </GlobalProvider>
+    </AuthProvider>
   );
 };
 
