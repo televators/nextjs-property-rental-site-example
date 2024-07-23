@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { toast } from 'react-toastify';
 import { FaBed, FaBath, FaRulerCombined, FaMoneyBill, FaMapMarker, FaBookmark } from 'react-icons/fa';
+import bookmarkProperty from '@/app/actions/bookmarkProperty';
 
 // enableBookmarkToggle is only used on the user's All Bookmarks page at /properties/bookmarks
 const PropertyCard = ({ property, enableBookmarkToggle }) => {
@@ -23,24 +24,20 @@ const PropertyCard = ({ property, enableBookmarkToggle }) => {
   };
 
   const handleClick = async () => {
-    try {
-      const res = await fetch(`/api/bookmarks/${propertyID}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          propertyId: propertyID,
-        }),
-      });
+    // NOTE: As of Next.js@14.1.0, `revalidatePath()` is only partially functional. The core action of clearing the route cache *does* work. However, the docs show that it can take a specific path and type of route and only clear *those* from the route cache on the next visit. This is false. This is *planned* functionality. Why they would go ahead and have the function accept the parameters and have docs for them when they explicitly don't work is beyond me.
+    // NOTE: This is completely undocumented but if you call `revalidatePath()` from a server action, Next will resend the markup and data and rerender the path you're on without a full reload. Was confused about why the Bookmarks page was getting rerendered when there was no client-side state and I had the original force reload disabled. That's why.
+    bookmarkProperty(propertyID).then((res) => {
+      if (res.error) toast.error(res.error);
 
-      if (res.status === 200) {
-        window.location.reload();
+      // If returned bookmark status is true, something went wrong; either user triggered same action in a different tab/window, the toggle was double triggered, or the data was stale when page loaded. Shouldn't ever happen but why not.
+      if (res.isBookmarked === true) {
+        toast.error('Error trying to remove bookmarked property. Please refresh the page and try again.');
       }
-    } catch (error) {
-      console.error(error);
-      toast.error('Error trying to remove bookmarked property.');
-    }
+
+      if (res.isBookmarked === false) {
+        toast.success('Property bookmark removed.');
+      }
+    });
   };
 
   return (
