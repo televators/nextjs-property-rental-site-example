@@ -8,7 +8,7 @@ const HomePage = () => {
     <>
       <Hero />
       <InfoBoxes />
-      <FeaturedProperties featuredCount={4} />
+      <FeaturedProperties featuredCount={2} />
       <HomeProperties />
     </>
   );

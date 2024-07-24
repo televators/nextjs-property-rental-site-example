@@ -7,6 +7,9 @@ import { revalidatePath } from "next/cache";
 import { redirect } from 'next/navigation';
 
 async function addProperty( formData ) {
+  // NOTE: Set at the end and used to perform redirect. See note about redirect weirdness.
+  let newProperty;
+
   try {
     await connectDB();
 
@@ -28,6 +31,14 @@ async function addProperty( formData ) {
     // Get Amenities & Image Data
     const amenities = formData.getAll( 'amenities' );
     const images = formData.getAll( 'images' ).filter( ( image ) => image.name !== '' );
+
+    // Get Featured Status
+    let featured = false;
+    const featuredData = formData.get( 'featured' );
+
+    if ( featuredData === 'on' ) {
+      featured = true;
+    }
 
     // NOTE: Images aren't set directly here since they're grabbed from the form data,
     // uploaded to Cloudinary, then the URLs for them from Cloudinary are added to the
@@ -57,6 +68,7 @@ async function addProperty( formData ) {
         phone: formData.get( 'seller_info.phone' ),
       },
       images: [],
+      is_featured: featured,
       owner: userID,
     };
 
@@ -85,7 +97,7 @@ async function addProperty( formData ) {
     //#endregion
 
     //#region Create new Property from schema and save to DB
-    const newProperty = new Property( propertyData );
+    newProperty = new Property( propertyData );
 
     await newProperty.save();
     //#endregion
@@ -96,12 +108,14 @@ async function addProperty( formData ) {
     // revalidate everything using the top level layout.
     revalidatePath( '/', 'layout' );
 
-    // Redirect to new single Property
-    redirect( `/properties/${ newProperty._id }` );
     //#endregion
   } catch ( error ) {
     throw new Error( error );
   }
+
+  // Redirect to new single Property
+  // NOTE: Redirect from server action throws "Error: Error: NEXT_REDIRECT" error if called from inside a try..catch block even if there wasn't an error. So, have to call it outside which means the redirect will still happen even if there was an error. Pretty stupid. Allegedly, can use some Transition stuff to work around it which I haven't looked into yet.
+  redirect( `/properties/${ newProperty._id }` );
 }
 
 export default addProperty;

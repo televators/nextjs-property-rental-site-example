@@ -268,8 +268,8 @@ const AddPropertyForm = () => {
       <div className='mb-4'>
         <label htmlFor='featured' className='block text-gray-700 font-bold mb-2'>
           Featured Property
+          <input type='checkbox' id='featured' name='featured' defaultChecked={false} className='ml-2' />
         </label>
-        <input type='checkbox' id='featured' name='featured' defaultChecked={false} />
       </div>
 
       {/* Submit Button */}
