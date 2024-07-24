@@ -266,6 +266,14 @@ const EditPropertyForm = ({ property }) => {
         />
       </div>
 
+      {/* Set Featured Flag */}
+      <div className='mb-4'>
+        <label htmlFor='featured' className='block text-gray-700 font-bold mb-2'>
+          Featured Property
+          <input type='checkbox' id='featured' name='featured' defaultChecked={property.is_featured} className='ml-2' />
+        </label>
+      </div>
+
       {/* Submit Button */}
       <div>
         <SubmitButton pendingText='Saving property...' text='Save Property' />

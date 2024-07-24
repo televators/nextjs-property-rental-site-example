@@ -1,8 +1,8 @@
-import { fetchProperties } from '@/utils/request';
+import Property from '@/models/Property';
 import FeaturedPropertyCard from './FeaturedPropertyCard';
 
 const FeaturedProperties = async ({ featuredCount }) => {
-  const properties = await fetchProperties({ showFeatured: true });
+  const properties = await Property.find({ is_featured: true }).limit(featuredCount).lean();
 
   if (!properties || properties.length <= 0) return null;
 

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { toast } from 'react-toastify';
+import { FaStar } from 'react-icons/fa';
 import deleteProperty from '@/app/actions/deleteProperty';
 
 const ProfileProperties = ({ properties: initialProperties }) => {
@@ -30,11 +31,12 @@ const ProfileProperties = ({ properties: initialProperties }) => {
       name,
       location: { street, city, state, zipcode },
       images,
+      is_featured,
     } = property;
 
     return (
       <div key={ID} className='mb-10'>
-        <Link href={`/properties/${ID}`}>
+        <Link href={`/properties/${ID}`} className='relative block'>
           <Image
             className='h-32 w-full rounded-md object-cover'
             src={images[0]}
@@ -43,6 +45,11 @@ const ProfileProperties = ({ properties: initialProperties }) => {
             height={0}
             sizes='100vw'
           />
+          {is_featured ? (
+            <div className='absolute inline-block top-4 right-4 bg-blue-600 text-white px-2 py-1.5 rounded-md shadow-md'>
+              Featured <FaStar className='relative inline w-5 h-auto ml-2 -top-0.5 text-yellow-300' />
+            </div>
+          ) : null}
         </Link>
 
         <div className='mt-2'>

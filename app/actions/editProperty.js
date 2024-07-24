@@ -27,9 +27,21 @@ async function editProperty( propertyID, formData ) {
       throw new Error( "Unauthorized: user doesn't own requested property." );
     }
 
+    // DEBUG:
+    console.log(formData.get( 'featured' ));
+
     //#region Create Property data object for database
     // Get Amenities
     const amenities = formData.getAll( 'amenities' );
+
+    //#region Get Featured Status
+    let featured = false;
+    const featuredData = formData.get( 'featured' );
+
+    if ( featuredData === 'on' ) {
+      featured = true;
+    }
+    //#endregion
 
     // Create big ol' object to ship to DB.
     // NOTE: Images aren't set directly here since they're grabbed from the form data,
@@ -59,24 +71,22 @@ async function editProperty( propertyID, formData ) {
         email: formData.get( 'seller_info.email' ),
         phone: formData.get( 'seller_info.phone' ),
       },
+      is_featured: featured,
       owner: userID,
     };
     //#endregion
 
     //#region Update Property in DB with new data
-    const updatedProperty = await Property.findByIdAndUpdate( propertyID, propertyData );
-
-    // NOTE: Invalidate cache so that the image is fetched for the new property when
-    // user next visits /properties. Since properties are on most pages, we can just
-    // revalidate everything using the top level layout.
-    revalidatePath( '/', 'layout' );
-
-    // Redirect to new single Property
-    redirect( `/properties/${ updatedProperty._id }` );
+    await Property.findByIdAndUpdate( propertyID, propertyData );
     //#endregion
   } catch ( error ) {
     throw new Error( error );
   }
+
+  // Redirect to Property page
+  // NOTE: Redirect from server action throws "Error: Error: NEXT_REDIRECT" error if called from inside a try..catch block even if there wasn't an error. So, have to call it outside which means the redirect will still happen even if there was an error. Pretty stupid. Allegedly, can use some Transition stuff to work around it which I haven't looked into yet.
+  +
+  redirect( `/properties/${ propertyID }` );
 }
 
 export default editProperty;
