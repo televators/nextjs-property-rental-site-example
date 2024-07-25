@@ -1,54 +1,50 @@
-'use client';
-import { useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
+import connectDB from '@/config/database';
+import Property from '@/models/Property';
+import { convertToSerializableObject } from '@/utils/convertToObject';
 import PropertyCard from '@/components/PropertyCard';
-import Spinner from '@/components/Spinner';
 import BackToAll from '@/components/single_property/BackToAll';
 import SearchPropertyForm from '@/components/SearchPropertyForm';
 
-const PropertySearchResultsPage = () => {
-  const searchParams = useSearchParams();
-  const [properties, setProperties] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const query = searchParams.get('s');
-  const type = searchParams.get('property-type');
+const PropertySearchResultsPage = async ({ searchParams }) => {
+  await connectDB();
 
-  useEffect(() => {
-    const getResults = async () => {
-      try {
-        const res = await fetch(`/api/properties/search?s=${query}&property-type=${type}`);
+  const query = searchParams['s'];
+  const type = searchParams['property-type'];
 
-        if (res.status === 200) {
-          const data = await res.json();
-          setProperties(data);
-        } else {
-          setProperties([]);
-        }
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const queryPattern = new RegExp(query, 'i');
+  // Match keyword(s) against Property fields
+  let queryMatch = {
+    $or: [
+      { name: queryPattern },
+      { description: queryPattern },
+      { 'location.street': queryPattern },
+      { 'location.city': queryPattern },
+      { 'location.state': queryPattern },
+      { 'location.zipcode': queryPattern },
+    ],
+  };
 
-    getResults();
-  }, [query, type]);
+  // Only check for property type if not 'All'
+  if (type && type !== 'All') {
+    const typePattern = new RegExp(type, 'i');
+    queryMatch.type = typePattern;
+  }
 
-  return loading ? (
-    <Spinner loading={loading} />
-  ) : (
+  const propertyDocs = await Property.find(queryMatch).lean();
+  const properties = [...propertyDocs].map(convertToSerializableObject);
+
+  return (
     <>
       {/* Search Form */}
-      <div className='bg-blue-700 py-6 mb-4'>
+      <div className='bg-blue-700 px-4 sm:px-6 lg:px-8 pt-6 pb-12'>
+        <h1 className='text-3xl font-bold text-white mb-6 text-center'>Search Results</h1>
         <SearchPropertyForm />
       </div>
 
       {/* Results */}
-      <section className='px-4 py-6'>
-        <div className='container-xl lg:container m-auto px-4 py-6'>
+      <section className='px-4 sm:px-6 lg:px-8 py-10'>
+        <div className='container-xl lg:container m-auto'>
           <BackToAll withWrapper={false} />
-
-          <h1 className='text-2xl mb-4'>Search results</h1>
 
           {properties.length === 0 ? (
             <h2>No properties found.</h2>

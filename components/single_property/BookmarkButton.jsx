@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { toast } from 'react-toastify';
 import { FaBookmark } from 'react-icons/fa';
+import checkBookmarkStatus from '@/app/actions/checkBookmarkStatus';
+import bookmarkProperty from '@/app/actions/bookmarkProperty';
 
 const BookmarkButton = ({ property }) => {
   const { data: session } = useSession();
@@ -25,61 +27,38 @@ const BookmarkButton = ({ property }) => {
       return;
     }
 
-    const fetchBookmarkStatus = async () => {
-      try {
-        const res = await fetch(`/api/bookmarks/${propertyID}`);
+    checkBookmarkStatus(propertyID).then((res) => {
+      if (res.error) toast.error(res.error);
 
-        if (res.status === 200) {
-          const { isBookmarked } = await res.json();
-          setLoading(false);
-          setIsBookmarked(isBookmarked);
-        }
-      } catch (error) {
-        console.error(error);
-        toast.error('Error while checking bookmark status.');
-      }
-    };
+      if (res.isBookmarked) setIsBookmarked(res.isBookmarked);
 
-    fetchBookmarkStatus();
-  }, []);
+      setLoading(false);
+    });
+  }, [userID]);
 
   const handleClick = async () => {
-    if (!userID) {
-      toast.error('Please sign in to bookmark properties.');
-    } else {
-      try {
-        const res = await fetch(`/api/bookmarks/${propertyID}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            propertyId: propertyID,
-          }),
-        });
+    if (!userID) return toast.error('Please sign in to bookmark properties.');
 
-        if (res.status === 200) {
-          const data = await res.json();
-          toast.success(data.message);
-          setIsBookmarked(data.isBookmarked);
-        }
-      } catch (error) {
-        console.error(error);
-        toast.error('Error trying to bookmark property.');
-      }
-    }
+    bookmarkProperty(propertyID).then((res) => {
+      if (res.error) return toast.error(res.error);
+
+      setIsBookmarked(res.isBookmarked);
+      toast.success(res.message);
+    });
   };
 
   return loading ? (
     <button
       disabled
-      className='bg-gray-500 text-white font-bold w-full py-2 px-4 rounded-full flex items-center justify-center'>
+      className='bg-gray-500 text-white font-bold w-full py-2 px-4 rounded-full flex items-center justify-center'
+    >
       Checking bookmark...
     </button>
   ) : (
     <button
       onClick={handleClick}
-      className={`${buttonVariant.color} text-white font-bold w-full py-2 px-4 rounded-full flex items-center justify-center`}>
+      className={`${buttonVariant.color} text-white font-bold w-full py-2 px-4 rounded-full flex items-center justify-center`}
+    >
       <FaBookmark className='mr-2' /> {buttonVariant.text}
     </button>
   );

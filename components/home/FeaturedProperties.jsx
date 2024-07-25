@@ -1,13 +1,13 @@
-import { fetchProperties } from '@/utils/request';
-import FeaturedPropertyCard from './FeaturedPropertyCard';
+import Property from '@/models/Property';
+import FeaturedPropertyCard from '../FeaturedPropertyCard';
 
 const FeaturedProperties = async ({ featuredCount }) => {
-  const properties = await fetchProperties({ showFeatured: true });
+  const properties = await Property.find({ is_featured: true }).limit(featuredCount).lean();
 
   if (!properties || properties.length <= 0) return null;
 
   return (
-    <section className='bg-blue-50 px-4 pt-6 pb-10'>
+    <section className='bg-blue-50 px-4 sm:px-6 lg:px-8 pt-8 pb-10'>
       <div className='container-xl lg:container m-auto'>
         <h2 className='text-3xl font-bold text-blue-500 mb-6 text-center'>Featured Properties</h2>
 

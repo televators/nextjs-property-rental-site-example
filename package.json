@@ -14,7 +14,7 @@
     "mapbox-gl": "^3.4.0",
     "mongodb": "^6.7.0",
     "mongoose": "^8.4.1",
-    "next": "14.2.3",
+    "next": "14.1.0",
     "next-auth": "^4.24.7",
     "photoswipe": "^5.4.4",
     "react": "^18",

@@ -1,65 +1,45 @@
+'use server';
 import connectDB from "@/config/database";
 import Property from '@/models/Property';
 import { getSessionUser } from "@/utils/getSessionUser";
 import cloudinary from "@/config/cloudinary";
 import { revalidatePath } from "next/cache";
+import { redirect } from 'next/navigation';
 
-// GET /api/properties
-// NOTE: If requesting the plain route itself, will return all properties in a simple array. If there are query params, checks for paging and returns object with count and properties themselves.
-export const GET = async ( request ) => {
+async function addProperty( formData ) {
+  // NOTE: Set at the end and used to perform redirect. See note about redirect weirdness.
+  let newProperty;
+
   try {
     await connectDB();
 
-    const { searchParams } = new URL(request.url);
-
-    if ( [...searchParams].length > 0 ) {
-      const page = searchParams.get('page') || 1;
-      // TODO: Before launch, set initial pageSize to 9 so the page loads a full page at first, then set pageSize to 3 or 6 after initial load. Will have to add like fifteen more properties to DB.
-      const pageSize = searchParams.get('page-size') || 6;
-
-      const skip = (page - 1) * pageSize;
-
-      const propertiesCount = await Property.countDocuments({});
-      const properties = await Property.find({}).skip(skip).limit(pageSize);
-
-      const result = {
-        propertiesCount,
-        properties,
-      };
-
-      return Response.json( result, { status: 200 } );
-    } else {
-      const properties = await Property.find({});
-
-      return Response.json( properties, { status: 200 } );
-    }
-
-  } catch ( error ) {
-    console.error( error );
-
-    return new Response( 'Something went wrong', { status: 500 } );
-  }
-};
-
-export const POST = async ( request ) => {
-  try {
-    await connectDB();
-
+    //#region User Authentication & Authorization
     const sessionUser = await getSessionUser();
 
+    // NOTE: throwing an Error from our server actions will be caught by our
+    // error.jsx ErrorBoundary component and show the user an Error page with
+    // message of the thrown error.
+
     if ( ! sessionUser || ! sessionUser.userID ) {
-      return new Response( 'User ID is required.', { status: 401 } );
+      throw new Error( 'User ID is required' );
     }
 
     const { userID } = sessionUser;
+    //#endregion
 
-    const formData = await request.formData();
-
-    // Get all of the amenities and images
+    //#region Create Property data object for database
+    // Get Amenities & Image Data
     const amenities = formData.getAll( 'amenities' );
     const images = formData.getAll( 'images' ).filter( ( image ) => image.name !== '' );
 
-    // Create big ol' object to ship to DB.
+    // Get Featured Status
+    let featured = false;
+    const featuredData = formData.get( 'featured' );
+
+    if ( featuredData === 'on' ) {
+      featured = true;
+    }
+
     // NOTE: Images aren't set directly here since they're grabbed from the form data,
     // uploaded to Cloudinary, then the URLs for them from Cloudinary are added to the
     // images array in the DB for the property.
@@ -88,10 +68,11 @@ export const POST = async ( request ) => {
         phone: formData.get( 'seller_info.phone' ),
       },
       images: [],
+      is_featured: featured,
       owner: userID,
     };
 
-    // Upload images to Cloudinary
+    //#region Upload images to Cloudinary
     for ( const image of images ) {
       const mimeType = image.type;
       const imageBuffer = await image.arrayBuffer();
@@ -112,21 +93,29 @@ export const POST = async ( request ) => {
       // Add each uploaded image's secure URL to the propertyData.images array
       propertyData.images.push( result.secure_url );
     }
+    //#endregion
+    //#endregion
 
-    // Create new Property from Mongoose Schema.
-    const newProperty = new Property( propertyData );
-    // Save new Property to DB.
+    //#region Create new Property from schema and save to DB
+    newProperty = new Property( propertyData );
+
     await newProperty.save();
+    //#endregion
 
-    // Invalidate cache for All Properties page so that the image is fetched
-    // for the new property when user visits /properties.
-    revalidatePath( '/properties' );
-    // Redirect to new single Property
-    // TODO: Add popup asking if you want to see new single, add another, or go to all Properties.
-    return Response.redirect( `${ process.env.NEXTAUTH_URL }/properties/${ newProperty._id }` );
-    // return Response.json( { message: 'Great success' }, { status: 200 } );
+    //#region Cache Invalidation & Server Response
+    // NOTE: Invalidate cache so that the image is fetched for the new property when
+    // user next visits /properties. Since properties are on most pages, we can just
+    // revalidate everything using the top level layout.
+    revalidatePath( '/', 'layout' );
+
+    //#endregion
   } catch ( error ) {
-    console.log( error );
-    return new Response( 'Faileure adding property', { status: 500 } );
+    throw new Error( error );
   }
-};
+
+  // Redirect to new single Property
+  // NOTE: Redirect from server action throws "Error: Error: NEXT_REDIRECT" error if called from inside a try..catch block even if there wasn't an error. So, have to call it outside which means the redirect will still happen even if there was an error. Pretty stupid. Allegedly, can use some Transition stuff to work around it which I haven't looked into yet.
+  redirect( `/properties/${ newProperty._id }` );
+}
+
+export default addProperty;
