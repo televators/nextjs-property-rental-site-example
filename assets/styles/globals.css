@@ -1,3 +1,6 @@
+/* HACK: When deploying to Vercel, none of the CSS gets built/included in the markup. Most common hack seems to be including a dummy CSS file here. Pretty stupid. */
+@import '../styles/dummy.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
