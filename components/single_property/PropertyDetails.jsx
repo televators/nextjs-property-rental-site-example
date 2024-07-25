@@ -57,25 +57,25 @@ const PropertyDetails = ({ property }) => {
         <h3 className='text-lg font-bold mb-6'>Description & Details</h3>
         <div className='flex justify-center gap-4 text-blue-500 mb-4 text-xl space-x-9'>
           <p>
-            <FaBed /> {property.beds + ' '}
+            <FaBed className='relative inline-block align-baseline top-1' /> {property.beds + ' '}
             <span className='hidden sm:inline'>Beds</span>
           </p>
           <p>
-            <FaBath /> {property.baths + ' '}
+            <FaBath className='inline-block align-baseline' /> {property.baths + ' '}
             <span className='hidden sm:inline'>Baths</span>
           </p>
           <p>
-            <FaRulerCombined />
+            <FaRulerCombined className='inline-block align-baseline mr-1' />
             {property.square_feet + ' '} <span className='hidden sm:inline'>sqft</span>
           </p>
         </div>
 
-        <p className='text-gray-500 mb-4'>{property.description}</p>
+        <p className='text-gray-500'>{property.description}</p>
       </div>
 
       {property.amenities.length > 0 && (
         <div className='bg-white p-6 rounded-lg shadow-md mt-6'>
-          <h3 className='text-lg font-bold mb-6'>Amenities</h3>
+          <h3 className='text-lg font-bold mb-2'>Amenities</h3>
 
           <ul className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 list-none space-x-1 space-y-2 indent-[-1em] ml-[1em]'>
             {property.amenities.map((amenity, index) => (

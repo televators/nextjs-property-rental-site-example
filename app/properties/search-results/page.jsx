@@ -36,16 +36,15 @@ const PropertySearchResultsPage = async ({ searchParams }) => {
   return (
     <>
       {/* Search Form */}
-      <div className='bg-blue-700 py-6 mb-4'>
+      <div className='bg-blue-700 px-4 sm:px-6 lg:px-8 pt-6 pb-12'>
+        <h1 className='text-3xl font-bold text-white mb-6 text-center'>Search Results</h1>
         <SearchPropertyForm />
       </div>
 
       {/* Results */}
-      <section className='px-4 py-6'>
-        <div className='container-xl lg:container m-auto px-4 py-6'>
+      <section className='px-4 sm:px-6 lg:px-8 py-10'>
+        <div className='container-xl lg:container m-auto'>
           <BackToAll withWrapper={false} />
-
-          <h1 className='text-2xl mb-4'>Search results</h1>
 
           {properties.length === 0 ? (
             <h2>No properties found.</h2>

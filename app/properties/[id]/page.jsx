@@ -9,6 +9,32 @@ import PropertyDetails from '@/components/single_property/PropertyDetails';
 import PropertyAllImages from '@/components/single_property/PropertyAllImages';
 import PropertySidebar from '@/components/single_property/PropertySidebar';
 
+export async function generateMetadata({ params }) {
+  const propertyID = params.id;
+
+  await connectDB();
+
+  if (!propertyID || propertyID.length === 0) {
+    return console.error('Error generating metadata: Property ID malformed. ID: ', '\n', propertyID);
+  }
+
+  const propertyEntry = await Property.findById(propertyID).lean();
+
+  if (!propertyEntry) {
+    return console.error('Error generating metadata: Property not found.');
+  }
+  const simplifiedPropertyEntry = convertToSerializableObject(propertyEntry);
+
+  // NOTE: General recommended max length for meta descriptions range from 120–160. Sticking with lower end.
+  return {
+    title: `${simplifiedPropertyEntry.name} | Property Pulse`,
+    description:
+      simplifiedPropertyEntry.description.length > 120
+        ? simplifiedPropertyEntry.description.substring(0, 118) + '...'
+        : simplifiedPropertyEntry.description,
+  };
+}
+
 const PropertyPage = async ({ params }) => {
   const PUBLIC_DOMAIN = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000';
   const propertyID = params.id;
@@ -57,8 +83,8 @@ const PropertyPage = async ({ params }) => {
       <PropertyHeaderImage image={propertyEntry.images[0]} />
       <BackToAll />
 
-      <section className='bg-blue-50'>
-        <div className='container m-auto py-10 px-6'>
+      <section className='bg-blue-50 py-10 px-6'>
+        <div className='container-xl lg:container m-auto'>
           <div className='grid grid-cols-1 md:grid-cols-70/30 w-full gap-6'>
             {/*
               NOTE: Even though the lean Mongoose query returns a plain JS object, it still has

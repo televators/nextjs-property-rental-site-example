@@ -11,10 +11,6 @@ const BookmarkedProperties = async () => {
 
   const sessionUser = await getSessionUser();
 
-  if (!sessionUser || !sessionUser.userID) {
-    return <h1>You must sign in to see property bookmarks.</h1>;
-  }
-
   const { bookmarks: bookmarkEntries } = await User.findById(sessionUser.userID).populate('bookmarks').lean();
   const bookmarkObjects = [];
 

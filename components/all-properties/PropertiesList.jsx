@@ -3,8 +3,8 @@ import Pagination from '@/components/all-properties/Pagination';
 
 const PropertiesList = ({ properties, resultsCount, page, pageSize }) => {
   return (
-    <section className='px-4 py-6'>
-      <div className='container-xl lg:container m-auto px-4 py-6'>
+    <section className='px-4 sm:px-6 lg:px-8 py-12'>
+      <div className='container-xl lg:container m-auto'>
         {properties.length === 0 ? (
           <h2>No properties found.</h2>
         ) : (

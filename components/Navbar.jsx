@@ -54,7 +54,7 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className='bg-blue-700 border-b border-blue-500'>
+    <nav className='bg-blue-700'>
       <div className='mx-auto max-w-7xl px-2 sm:px-6 lg:px-8'>
         <div className='relative flex h-20 items-center justify-between'>
           {/* Mobile menu button*/}
@@ -88,9 +88,9 @@ const Navbar = () => {
             <Link className='flex flex-shrink-0 items-center' href='/'>
               {/* NOTE: Setting `priority` to true so it gets preloaded. Next reported that it was the LCP
                 and should be marked as priority. Use on any layout-shaping images above the fold. */}
-              <Image className='h-10 w-auto' src={logo} alt='PropertyPulse' priority={true} />
+              <Image className='h-6 md:h-10 w-auto' src={logo} alt='PropertyPulse' priority={true} />
 
-              <span className='hidden md:block text-white text-2xl font-bold ml-2'>PropertyPulse</span>
+              <span className='text-white text-lg md:text-2xl font-bold ml-2'>PropertyPulse</span>
             </Link>
 
             {/* Desktop Menu Hidden below md screens */}

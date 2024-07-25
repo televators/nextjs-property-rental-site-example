@@ -7,14 +7,12 @@ import '@/assets/styles/globals.css';
 import 'react-toastify/dist/ReactToastify.css';
 import 'photoswipe/dist/photoswipe.css';
 
-// TODO: New route group for photoswipe and toastify maybe
-
-// TODO: Setup metadata for all pages instead of just pulling this global one
 export const metadata = {
+  metadataBase: new URL(process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'),
   title: 'Property Pulse | Find the perfect rental',
   description:
     'Lorem ipsum dolor sit amet consectetur adipisicing elit. Pariatur soluta blanditiis itaque repudiandae dicta fuga deleniti?',
-  keywords: 'rental, find rentals, rental property, for rent, rent daily, rent weekly',
+  keywords: ['rental, find rentals, rental property, for rent, rent daily, rent weekly'],
 };
 
 const MainLayout = ({ children }) => {

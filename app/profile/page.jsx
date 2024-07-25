@@ -29,13 +29,13 @@ const ProfilePage = async () => {
   const properties = [...propertyDocs].map(convertToSerializableObject);
 
   return (
-    <section className='bg-blue-50'>
-      <div className='container m-auto py-24'>
-        <div className='bg-white px-6 py-8 mb-4 shadow-md rounded-md border m-4 md:m-0'>
+    <section className='px-4 sm:px-6 lg:px-8 py-24 bg-blue-50'>
+      <div className='container m-auto'>
+        <div className='bg-white px-4 sm:px-6 lg:px-8 py-8 mb-4 shadow-md rounded-md border m-4 md:m-0'>
           <h1 className='text-3xl font-bold mb-4'>Your Profile</h1>
 
           <div className='flex flex-col md:flex-row'>
-            <div className='md:w-1/4 mr-20 mt-10'>
+            <div className='md:w-1/4 md:mr-20 mb-10 md:mb-0'>
               <div className='mb-4'>
                 <Image
                   className='h-32 w-32 md:h-48 md:w-48 rounded-xl mx-auto md:mx-0'
@@ -47,18 +47,18 @@ const ProfilePage = async () => {
                 />
               </div>
 
-              <h2 className='text-2xl mb-4'>
+              <h2 className='text-lg mb-4'>
                 <span className='font-bold block'>Name: </span> {profileName}
               </h2>
 
-              <h2 className='text-2xl'>
+              <h2 className='text-lg'>
                 <span className='font-bold block'>Email: </span> {profileEmail}
               </h2>
             </div>
 
             {/* User Listings */}
-            <div className='md:w-3/4 md:pl-4'>
-              <h2 className='text-xl font-semibold mb-4'>Your Listings</h2>
+            <div className='md:w-3/4 md:pl-4 -mb-10'>
+              <h2 className='text-2xl font-bold mb-4'>Your Listings</h2>
 
               {/* No User Listings */}
               {properties.length === 0 ? (

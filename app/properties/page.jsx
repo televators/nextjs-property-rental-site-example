@@ -4,6 +4,10 @@ import SearchPropertyForm from '@/components/SearchPropertyForm';
 import PropertiesList from '@/components/all-properties/PropertiesList';
 import { convertToSerializableObject } from '@/utils/convertToObject';
 
+const metadata = {
+  title: 'All Properties | Property Pulse',
+};
+
 const PropertiesPage = async ({ searchParams: { pageSize = 6, page = 1 } }) => {
   await connectDB();
 
@@ -21,8 +25,8 @@ const PropertiesPage = async ({ searchParams: { pageSize = 6, page = 1 } }) => {
 
   return (
     <>
-      <section className='px-4 py-6 bg-blue-700'>
-        <div className='container-xl lg:container m-auto px-4 py-6'>
+      <section className='px-4 sm:px-6 lg:px-8 py-12 bg-blue-700'>
+        <div className='container-xl lg:container m-auto'>
           <h1 className='text-3xl font-bold text-white mb-6 text-center'>All Properties</h1>
 
           <SearchPropertyForm />
@@ -40,3 +44,4 @@ const PropertiesPage = async ({ searchParams: { pageSize = 6, page = 1 } }) => {
 };
 
 export default PropertiesPage;
+export { metadata };
